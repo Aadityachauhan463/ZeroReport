@@ -1,4 +1,4 @@
-entrypoint = "/ZeroReport/backend/index.html"
+entrypoint = "index.html"
 modules = ["nodejs-20", "python-3.11", "web"]
 
 [nix]

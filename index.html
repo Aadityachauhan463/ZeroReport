@@ -8,30 +8,29 @@
     <button id="signup">Sign Up</button>
     <button id="addData">Add Data</button>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-      // Import from CDN
+      // Import Firebase SDKs from CDN
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
       import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
       import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-// your config from firebase console
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
-  authDomain: "sigma-app-e9397.firebaseapp.com",
-  projectId: "sigma-app-e9397",
-  storageBucket: "sigma-app-e9397.firebasestorage.app",
-  messagingSenderId: "561606435145",
-  appId: "1:561606435145:web:c68e3629ce50215f177a98",
-  measurementId: "G-1KG5C55LEB"
-};
-      // Initialize Firebase
+      // 🔥 Your Firebase Config (fixed)
+      const firebaseConfig = {
+        apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
+        authDomain: "sigma-app-e9397.firebaseapp.com",
+        projectId: "sigma-app-e9397",
+        storageBucket: "sigma-app-e9397.appspot.com",
+        messagingSenderId: "561606435145",
+        appId: "1:561606435145:web:c68e3629ce50215f177a98",
+        measurementId: "G-1KG5C55LEB"
+      };
+
+      // 🚀 Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-      // Auth test
+      // 🧠 Auth Test
       document.getElementById("signup").addEventListener("click", async () => {
         try {
           const userCred = await createUserWithEmailAndPassword(auth, "sigma@chad.com", "123456");
@@ -41,14 +40,14 @@ const firebaseConfig = {
         }
       });
 
-      // Firestore test
+      // 💾 Firestore Test
       document.getElementById("addData").addEventListener("click", async () => {
         try {
           await addDoc(collection(db, "notes"), {
             text: "Grind never stops 💪",
             time: new Date()
           });
-          console.log("💾 Data added successfully!");
+          console.log("✅ Data added successfully!");
         } catch (err) {
           console.error("DB error:", err.message);
         }

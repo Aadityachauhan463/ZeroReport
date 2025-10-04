@@ -1,4 +1,4 @@
-entrypoint = "index.html"
+entrypoint = "/ZeroReport/backend/index.html"
 modules = ["nodejs-20", "python-3.11", "web"]
 
 [nix]
@@ -57,6 +57,10 @@ externalPort = 80
 [[ports]]
 localPort = 9005
 externalPort = 3000
+
+[[ports]]
+localPort = 33587
+externalPort = 3001
 
 [agent]
 expertMode = true

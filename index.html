@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Sigma Firebase</title>
@@ -8,12 +8,43 @@
     <button id="signup">Sign Up</button>
     <button id="addData">Add Data</button>
 
+    <h2>Upload a File</h2>
+    <input type="file" id="fileInput" />
+    <button id="uploadBtn">Upload to Firebase</button>
+    <!-- firebase sdks -->
     <script type="module">
       // Import Firebase SDKs from CDN
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-      import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
+      import {
+        getStorage,
+        ref,
+        uploadBytes,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
+
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+      const db = getFirestore();
+
+      await addDoc(collection(db, "files"), {
+        name: file.name,
+        url: url,
+        uploadedAt: new Date(),
+        user: auth.currentUser?.uid || "anon",
+      });
       // 🔥 Your Firebase Config (fixed)
       const firebaseConfig = {
         apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
@@ -22,7 +53,7 @@
         storageBucket: "sigma-app-e9397.appspot.com",
         messagingSenderId: "561606435145",
         appId: "1:561606435145:web:c68e3629ce50215f177a98",
-        measurementId: "G-1KG5C55LEB"
+        measurementId: "G-1KG5C55LEB",
       };
 
       // 🚀 Initialize Firebase
@@ -33,7 +64,11 @@
       // 🧠 Auth Test
       document.getElementById("signup").addEventListener("click", async () => {
         try {
-          const userCred = await createUserWithEmailAndPassword(auth, "sigma@chad.com", "123456");
+          const userCred = await createUserWithEmailAndPassword(
+            auth,
+            "sigma@chad.com",
+            "123456",
+          );
           console.log("🔥 Signed up:", userCred.user.email);
         } catch (err) {
           console.error("Signup error:", err.message);
@@ -45,11 +80,35 @@
         try {
           await addDoc(collection(db, "notes"), {
             text: "Grind never stops 💪",
-            time: new Date()
+            time: new Date(),
           });
           console.log("✅ Data added successfully!");
         } catch (err) {
           console.error("DB error:", err.message);
+        }
+      });
+
+      const storage = getStorage(); // connects Firebase Storage
+      const fileInput = document.getElementById("fileInput");
+      const uploadBtn = document.getElementById("uploadBtn");
+
+      uploadBtn.addEventListener("click", async () => {
+        const file = fileInput.files[0]; // get selected file
+        if (!file) return alert("Select a file first bro 😎");
+
+        // create a reference in storage
+        const storageRef = ref(storage, "uploads/" + file.name);
+
+        try {
+          // upload file
+          await uploadBytes(storageRef, file);
+          console.log("✅ File uploaded, sigma style!");
+
+          // get public URL to use later
+          const url = await getDownloadURL(storageRef);
+          console.log("🔥 File URL:", url);
+        } catch (err) {
+          console.error("Upload error:", err.message);
         }
       });
     </script>

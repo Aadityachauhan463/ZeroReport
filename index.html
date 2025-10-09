@@ -1,57 +1,704 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Sigma Firebase</title>
-  </head>
-  <body>
-    <h1>🔥 Sigma Firebase App 🔥</h1>
-    <button id="signup">Sign Up</button>
-    <button id="addData">Add Data</button>
-
-    <script type="module">
-      // Import Firebase SDKs from CDN
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-      import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-
-      // 🔥 Your Firebase Config (fixed)
-      const firebaseConfig = {
-        apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
-        authDomain: "sigma-app-e9397.firebaseapp.com",
-        projectId: "sigma-app-e9397",
-        storageBucket: "sigma-app-e9397.appspot.com",
-        messagingSenderId: "561606435145",
-        appId: "1:561606435145:web:c68e3629ce50215f177a98",
-        measurementId: "G-1KG5C55LEB"
-      };
-
-      // 🚀 Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      // 🧠 Auth Test
-      document.getElementById("signup").addEventListener("click", async () => {
-        try {
-          const userCred = await createUserWithEmailAndPassword(auth, "sigma@chad.com", "123456");
-          console.log("🔥 Signed up:", userCred.user.email);
-        } catch (err) {
-          console.error("Signup error:", err.message);
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroReport 2.0 - Where Data Comes Alive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      });
 
-      // 💾 Firestore Test
-      document.getElementById("addData").addEventListener("click", async () => {
-        try {
-          await addDoc(collection(db, "notes"), {
-            text: "Grind never stops 💪",
-            time: new Date()
-          });
-          console.log("✅ Data added successfully!");
-        } catch (err) {
-          console.error("DB error:", err.message);
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #050812;
+            color: #e8e9f3;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-      });
+
+        /* Advanced Background System */
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .gradient-mesh {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 80, 236, 0.15), transparent),
+                radial-gradient(ellipse 60% 50% at 0% 50%, rgba(139, 92, 246, 0.1), transparent),
+                radial-gradient(ellipse 60% 50% at 100% 50%, rgba(167, 139, 250, 0.08), transparent);
+        }
+
+        .noise {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            opacity: 0.4;
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.8), transparent);
+            border-radius: 50%;
+            animation: float-up 20s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Typography System */
+        .display-1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 400;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .display-2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .body-large {
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* Layout System */
+        .section {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(1.5rem, 5vw, 4rem);
+            width: 100%;
+        }
+
+        /* Hero Section - Reimagined */
+        .hero {
+            position: relative;
+            padding: clamp(4rem, 10vh, 8rem) 0;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(88, 80, 236, 0.15) 30%, transparent 70%);
+            filter: blur(60px);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        .hero-title {
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #e0d4ff 50%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            margin-bottom: 2.5rem;
+            color: #b8b9d4;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+        }
+
+        .hero-tagline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            font-style: italic;
+            color: #a78bfa;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.9s forwards;
+        }
+
+        /* Button System */
+        .btn {
+            position: relative;
+            padding: 1.25rem 3rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            color: white;
+            box-shadow: 0 20px 60px -15px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 30px 80px -15px rgba(139, 92, 246, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e8e9f3;
+            border: 1.5px solid rgba(167, 139, 250, 0.3);
+            backdrop-filter: blur(20px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Experience Section - Card-based Flow */
+        .experience {
+            padding: clamp(6rem, 15vh, 12rem) 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: clamp(4rem, 10vh, 8rem);
+        }
+
+        .section-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #a78bfa;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .steps-container {
+            display: grid;
+            gap: clamp(3rem, 6vw, 6rem);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .step-card {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            padding: clamp(3rem, 6vw, 5rem);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 32px;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(167, 139, 250, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+        }
+
+        .step-card:hover::before {
+            opacity: 1;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            right: 40px;
+            font-size: clamp(6rem, 15vw, 10rem);
+            font-weight: 200;
+            color: rgba(139, 92, 246, 0.08);
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .step-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: 1.5rem;
+            color: #e8e9f3;
+            font-weight: 400;
+        }
+
+        .step-description {
+            font-size: clamp(1.125rem, 2vw, 1.25rem);
+            color: #b8b9d4;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .step-quote {
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            font-style: italic;
+            color: #a78bfa;
+            text-align: center;
+        }
+
+        /* Magic Section - Bento Grid */
+        .magic {
+            padding: clamp(6rem, 15vh, 12rem) 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.03) 50%, transparent 100%);
+        }
+
+        .magic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .magic-card {
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .magic-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(167, 139, 250, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+        }
+
+        .magic-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(0 4px 20px rgba(167, 139, 250, 0.3));
+        }
+
+        .magic-title {
+            font-size: 1.375rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: #e8e9f3;
+        }
+
+        .magic-description {
+            font-size: 1.0625rem;
+            color: #b8b9d4;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* Features - Clean List */
+        .features {
+            padding: clamp(6rem, 15vh, 12rem) 0;
+        }
+
+        .features-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            color: #b8b9d4;
+            font-weight: 300;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            color: #e8e9f3;
+            padding-left: 1rem;
+        }
+
+        .feature-item strong {
+            color: #e8e9f3;
+            font-weight: 500;
+        }
+
+        /* Final CTA - Grand Finale */
+        .final-cta {
+            padding: clamp(8rem, 20vh, 16rem) 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .moon-sphere {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(199, 177, 253, 0.15) 0%, rgba(167, 139, 250, 0.08) 40%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: float-sphere 10s ease-in-out infinite;
+        }
+
+        @keyframes float-sphere {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -55%) scale(1.1); }
+        }
+
+        .final-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .final-title {
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #e0d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .final-subtitle {
+            margin-bottom: 3rem;
+            color: #b8b9d4;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            color: #7c7d94;
+            font-size: 0.9375rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .magic-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .step-number {
+                font-size: 5rem;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-canvas">
+        <div class="gradient-mesh"></div>
+        <div class="noise"></div>
+        <div class="floating-particles" id="particles"></div>
+    </div>
+
+    <!-- Hero -->
+    <section class="section hero">
+        <div class="hero-glow"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="display-1 hero-title">Watch your data turn into stories.</h1>
+                <p class="body-large hero-subtitle">
+                    Upload a simple file.<br>
+                    Answer a few questions.<br>
+                    Then sit back — and watch ZeroReport weave your data into something alive.
+                </p>
+                <p class="hero-tagline">"It's not code. It's alchemy."</p>
+                <div class="hero-cta">
+                    <a href="#" class="btn btn-primary">
+                        <span>✨ Try the Magic</span>
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <span>👁️ See It in Action</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="section experience">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">📜 THE EXPERIENCE</div>
+                <h2 class="display-2">Three steps to transformation</h2>
+            </div>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Whisper your data.</h3>
+                        <p class="step-description">
+                            Drop your CSV. No setup, no struggle — just your raw truth.
+                        </p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Guide the spell.</h3>
+                        <p class="step-description">
+                            A few simple questions help ZeroReport understand your intent.<br>
+                            It listens. It learns. It shapes.
+                        </p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Behold the creation.</h3>
+                        <p class="step-description">
+                            From numbers and chaos, emerges clarity — a story, a report, a revelation.
+                        </p>
+                        <p class="step-quote">"Some call it AI. We call it creation."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Magic Inside -->
+    <section class="section magic">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">💫 THE MAGIC INSIDE</div>
+                <h2 class="display-2">Built for dreamers</h2>
+            </div>
+            <div class="magic-grid">
+                <div class="magic-card">
+                    <span class="magic-icon">🪶</span>
+                    <h3 class="magic-title">Effortless creation</h3>
+                    <p class="magic-description">Reports made from intent, not templates.</p>
+                </div>
+                <div class="magic-card">
+                    <span class="magic-icon">🔮</span>
+                    <h3 class="magic-title">Any data, infinite form</h3>
+                    <p class="magic-description">Academic, financial, marketing — it adapts to your wish.</p>
+                </div>
+                <div class="magic-card">
+                    <span class="magic-icon">💠</span>
+                    <h3 class="magic-title">Design with soul</h3>
+                    <p class="magic-description">Crafted layouts that look printed by starlight.</p>
+                </div>
+                <div class="magic-card">
+                    <span class="magic-icon">🧠</span>
+                    <h3 class="magic-title">Built on pure intelligence</h3>
+                    <p class="magic-description">The same language models shaping tomorrow.</p>
+                </div>
+                <div class="magic-card">
+                    <span class="magic-icon">🌠</span>
+                    <h3 class="magic-title">For dreamers who work with data</h3>
+                    <p class="magic-description">Because even numbers deserve art.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">🧩 FEATURES</div>
+                <h2 class="display-2">Magic that remembers</h2>
+            </div>
+            <div class="features-container">
+                <div class="feature-item">✦ <strong>Version Control</strong> — because even magic deserves memory.</div>
+                <div class="feature-item">✦ <strong>"Regen"</strong> — wave again, and the spell reshapes itself.</div>
+                <div class="feature-item">✦ <strong>Save Templates</strong> — keep your favorite spells close.</div>
+                <div class="feature-item">✦ <strong>Coming Soon: Automation</strong> — the magic that never sleeps.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="section final-cta">
+        <div class="moon-sphere"></div>
+        <div class="container">
+            <div class="final-content">
+                <h2 class="display-2 final-title">🌙 Where logic meets wonder.</h2>
+                <p class="body-large final-subtitle">
+                    Not another chatbot.<br>
+                    Just the simplest way to turn raw data into living, breathing insight.
+                </p>
+                <a href="#" class="btn btn-primary">
+                    <span>✨ Begin the Transformation</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ZeroReport. Where Data Comes Alive.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Generate floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Parallax effect on scroll
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.pageYOffset;
+                    const heroGlow = document.querySelector('.hero-glow');
+                    if (heroGlow) {
+                        heroGlow.style.transform = `translate(-50%, -50%) translateY(${scrolled * 0.5}px)`;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
     </script>
-  </body>
+</body>
 </html>

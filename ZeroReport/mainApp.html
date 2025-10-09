@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroReport 2.0 - The Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #050812;
+            color: #e8e9f3;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ZeroReport Background System */
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .gradient-mesh {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 80, 236, 0.15), transparent),
+                radial-gradient(ellipse 60% 50% at 0% 50%, rgba(139, 92, 246, 0.1), transparent),
+                radial-gradient(ellipse 60% 50% at 100% 50%, rgba(167, 139, 250, 0.08), transparent);
+        }
+
+        .noise {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            opacity: 0.4;
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.8), transparent);
+            border-radius: 50%;
+            animation: float-up 20s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Typography System */
+        .display-2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        
+        .step-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: 1.5rem;
+            color: #e8e9f3;
+            font-weight: 400;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: clamp(3rem, 10vh, 6rem) clamp(1.5rem, 5vw, 4rem);
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .header-title {
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #e0d4ff 50%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            color: #b8b9d4;
+            font-weight: 300;
+        }
+
+        /* Card System (Themed) */
+        .step-card {
+            position: relative;
+            padding: clamp(2rem, 6vw, 4rem);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 32px;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(167, 139, 250, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Staggered Animations */
+        #step1 { animation-delay: 0.1s; }
+        #step2 { animation-delay: 0.2s; }
+        #step3 { animation-delay: 0.3s; }
+        
+        .step-description {
+            font-size: clamp(1rem, 1.5vw, 1.125rem);
+            color: #b8b9d4;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        /* NEW: Reimagined Upload Section */
+        .upload-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .upload-zone {
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .upload-circle {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0) 70%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .upload-circle::before, .upload-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .upload-circle::before {
+            border: 1px dashed rgba(167, 139, 250, 0.3);
+            transition: all 0.4s ease;
+            animation: rotate 30s linear infinite;
+        }
+
+        .upload-circle::after {
+            width: calc(100% + 12px);
+            height: calc(100% + 12px);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            animation: pulse-glow 5s infinite ease-in-out;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.02); opacity: 1; }
+        }
+
+        .upload-zone:hover .upload-circle::before,
+        .upload-zone.dragover .upload-circle::before {
+            border-color: rgba(167, 139, 250, 0.8);
+            transform: translate(-50%, -50%) scale(1.02) rotate(5deg);
+        }
+
+        .upload-zone:hover .upload-circle,
+        .upload-zone.dragover .upload-circle {
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.02) 70%);
+        }
+
+        .upload-icon {
+            width: 60px;
+            height: 60px;
+            color: #a78bfa;
+            margin-bottom: 1.25rem;
+            transition: transform 0.4s ease;
+        }
+
+        .upload-zone:hover .upload-icon,
+        .upload-zone.dragover .upload-icon {
+            transform: translateY(-8px);
+        }
+
+        .upload-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #e8e9f3;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: #b8b9d4;
+            font-weight: 300;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        
+        .file-input { display: none; }
+
+        .file-info {
+            margin-top: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            color: #e0d4ff;
+            display: none;
+            text-align: left;
+        }
+
+        .file-info.show { display: block; }
+        
+        /* QnA Form Section */
+        .qna-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .qna-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .qna-label {
+            font-weight: 500;
+            color: #d1d2e0;
+            font-size: 1rem;
+        }
+
+        .qna-input, .qna-select, .qna-textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.2);
+            color: #e8e9f3;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .qna-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%23a78bfa' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.25rem center;
+            background-size: 1.25em;
+            padding-right: 3.5rem; /* Make space for arrow */
+        }
+
+        .qna-input::placeholder, .qna-textarea::placeholder {
+            color: #7c7d94;
+        }
+
+        .qna-input:focus, .qna-select:focus, .qna-textarea:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+        }
+
+        .qna-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        /* Button System */
+        .btn-group {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .btn {
+            position: relative;
+            padding: 1.25rem 3rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            color: white;
+            box-shadow: 0 20px 60px -15px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 30px 80px -15px rgba(139, 92, 246, 0.6);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Spinner */
+        .spinner-container {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .spinner-container.show { display: block; }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            border: 4px solid rgba(167, 139, 250, 0.2);
+            border-top-color: #a78bfa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner-text {
+            color: #b8b9d4;
+            font-size: 1rem;
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Report Preview */
+        .report-content {
+            line-height: 1.8;
+            color: #b8b9d4;
+            font-weight: 300;
+        }
+        
+        .report-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #e8e9f3;
+            margin-bottom: 1.5rem;
+        }
+        
+        .report-content h3 {
+            font-weight: 500;
+            color: #c4b5fd;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .report-placeholder {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #7c7d94;
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: clamp(2rem, 8vh, 4rem) 1.5rem;
+            }
+
+            .step-card {
+                padding: 2rem;
+            }
+
+            .upload-circle {
+                width: 240px;
+                height: 240px;
+            }
+
+            .btn-group .btn {
+                width: 100%;
+                max-width: 380px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-canvas">
+        <div class="gradient-mesh"></div>
+        <div class="noise"></div>
+        <div class="floating-particles" id="particles"></div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1 class="display-2 header-title">Create your story.</h1>
+            <p class="tagline">From raw numbers to living insight, in three simple steps.</p>
+        </header>
+
+        <!-- Step 1: Upload Data -->
+        <div class="step-card" id="step1">
+            <h2 class="step-title">1. Whisper your data.</h2>
+            <p class="step-description">Drop your CSV file below. No setup, no struggle—just your raw truth. The process is entirely secure and your data is never stored.</p>
+            
+            <div class="upload-area">
+                <label for="file-input" class="upload-zone" id="upload-zone">
+                    <div class="upload-circle">
+                        <div class="upload-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9A2.25 2.25 0 0018.75 19.5v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" />
+                            </svg>
+                        </div>
+                        <div class="upload-text">Drop your data here</div>
+                        <div class="upload-subtext">or click to summon</div>
+                    </div>
+                </label>
+            </div>
+            <input type="file" id="file-input" class="file-input" accept=".csv">
+
+            <div class="file-info" id="file-info">
+                File selected: <strong id="file-name"></strong>
+            </div>
+        </div>
+
+        <!-- Step 2: Guide the Spell -->
+        <div class="step-card" id="step2">
+            <h2 class="step-title">2. Guide the spell.</h2>
+            <p class="step-description">A few simple questions help ZeroReport understand your intent. It listens. It learns. It shapes.</p>
+            <br>
+            <div class="qna-grid">
+                 <div class="qna-item">
+                    <label for="q-purpose" class="qna-label">1. Purpose / Objective</label>
+                    <textarea id="q-purpose" class="qna-textarea" placeholder="e.g., 'Analyze quarterly sales to identify growth opportunities.'"></textarea>
+                </div>
+                <div class="qna-item">
+                    <label for="q-audience" class="qna-label">2. Audience / Tone</label>
+                    <select id="q-audience" class="qna-select">
+                        <option>Formal & Professional (for executives)</option>
+                        <option>Casual & Conversational (for team updates)</option>
+                        <option>Data-driven & Technical (for analysts)</option>
+                        <option>Inspirational & Story-driven (for marketing)</option>
+                    </select>
+                </div>
+                <div class="qna-item">
+                    <label for="q-focus" class="qna-label">3. Key Focus / Metrics</label>
+                    <input type="text" id="q-focus" class="qna-input" placeholder="e.g., 'Revenue growth, customer acquisition cost, regional performance'">
+                </div>
+                 <div class="qna-item">
+                    <label for="q-format" class="qna-label">4. Length / Format</label>
+                    <select id="q-format" class="qna-select">
+                        <option>Executive Summary (1 page)</option>
+                        <option>Brief Report (2-3 pages)</option>
+                        <option>In-depth Analysis (5+ pages)</option>
+                    </select>
+                </div>
+                 <div class="qna-item">
+                    <label for="q-notes" class="qna-label">5. Extra Notes / Custom Instructions</label>
+                    <textarea id="q-notes" class="qna-textarea" placeholder="e.g., 'Highlight the performance of the new product line.'"></textarea>
+                </div>
+                <div class="qna-item">
+                    <label for="q-company" class="qna-label">6. Made By (Optional)</label>
+                    <input type="text" id="q-company" class="qna-input" placeholder="Your company name, e.g., 'Acme Corp'">
+                </div>
+                 <div class="qna-item">
+                    <label for="q-design" class="qna-label">7. Design Style</label>
+                    <select id="q-design" class="qna-select">
+                        <option>Minimalist & Clean</option>
+                        <option>Elegant & Classic</option>
+                        <option>Bold & Modern</option>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" id="generate-btn" disabled>
+                    <span>✨ Weave the Story</span>
+                </button>
+            </div>
+             <div class="spinner-container" id="spinner">
+                <div class="spinner"></div>
+                <p class="spinner-text">The alchemy is happening...</p>
+            </div>
+        </div>
+
+        <!-- Step 3: Behold the Creation -->
+        <div class="step-card" id="step3">
+            <h2 class="step-title">3. Behold the creation.</h2>
+            <div class="report-content" id="report-content">
+                 <div class="report-placeholder" id="report-placeholder">Your report will materialize here.</div>
+                 <div id="report-text-container" style="display: none;">
+                    <!-- DUMMY CONTENT FOR DEMO -->
+                    <h2>Quarterly Sales Performance Analysis</h2>
+                    <p>This report provides a comprehensive analysis of the sales performance for the previous quarter, highlighting key trends, top-performing regions, and strategic recommendations for the upcoming period. The data suggests a strong upward trajectory in the North American market, while the European sector shows signs of stabilization after a period of volatility.</p>
+                    <h3>Key Insights & Observations</h3>
+                    <p>The most significant growth was observed in the "Enterprise Solutions" category, which saw a 22% increase in revenue compared to the prior quarter. This success can be attributed to the recent product update and a targeted marketing campaign that resonated well with our key demographic.</p>
+                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Particle Generation
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // UI Element References
+        const uploadZone = document.getElementById('upload-zone');
+        const fileInput = document.getElementById('file-input');
+        const fileInfo = document.getElementById('file-info');
+        const fileNameEl = document.getElementById('file-name');
+        const generateBtn = document.getElementById('generate-btn');
+        const spinner = document.getElementById('spinner');
+        const reportPlaceholder = document.getElementById('report-placeholder');
+        const reportTextContainer = document.getElementById('report-text-container');
+        
+        // File Upload Logic
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelection(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelection(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelection(file) {
+            fileNameEl.textContent = file.name;
+            fileInfo.classList.add('show');
+            generateBtn.disabled = false;
+        }
+
+        async function readCsvAsString(file) {
+  if (!file) throw new Error("No file provided");
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = e => reject(e.target.error);
+    reader.readAsText(file);
+  });
+        }
+        // Csv processing logic
+        document.getElementById("file-input").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  const main_data = await readCsvAsString(file);
+})
+        // Report Generation Logic
+        
+         document.getElementById('generate-btn').addEventListener('click', async(){
+             const report_purpose = document.getElementById('q-purpose').value;
+             const report_audience_or_tone = document.getElementById('q-audience').value;
+             const report_key_focus = document.getElementById('q-focus').value;
+             const report_length_or_format = document.getElementById('q-format').value;
+             const report_extra_notes = document.getElementById('q-notes').value;
+             const user_company = document.getElementById('q-company').value;
+             const design_style = document.getElementById('q-design').value;
+             
+            try {
+  const res = await fetch("/api/geminiGenerateReport", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      report_purpose,
+      report_audience_or_tone,
+      report_key_focus,
+      report_length_or_format,
+      report_extra_notes,
+      user_company,
+      design_style,
+      main_data
+    })
+  });
+
+  // since it returns HTML, we read it as text not JSON
+  const html = await res.text();
+  // figure out what to do with the HTML
+  if (res.ok) {
+    // inject into the page or handle however you want
+    // document.body.innerHTML = html; 
+    // OR if you only want to show inside a div:
+    // resultBox.innerHTML = html;
+  } else {
+    console.error("❌ Server Error (HTML response):", html);
+  }
+
+} catch (err) {
+  console.error("💀 Network Error:", err.message || err);
+            }
+             
+             
+         })
+            
+            ;
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Send Email MVP</title>
+<style>
+body { font-family: 'Segoe UI', sans-serif; background:#111; color:#eee; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
+.container { text-align:center; background:#222; padding:2rem; border-radius:1rem; box-shadow:0 0 20px rgba(255,255,255,0.1); width:100%; max-width:400px;}
+input, textarea { width:100%; padding:0.7rem; margin:0.5rem 0; border-radius:0.5rem; border:none; font-size:1rem;}
+button { background:#0f9; border:none; color:#111; padding:1rem 2rem; font-size:1rem; border-radius:0.5rem; cursor:pointer; transition:transform 0.1s;}
+button:hover { transform: scale(1.05); }
+#result { margin-top:1rem; white-space:pre-line; text-align:left;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📧 Send Test Email</h1>
+  <form id="emailForm">
+    <input type="email" id="to" placeholder="Recipient Email" required />
+    <input type="text" id="subject" placeholder="Subject" required />
+    <textarea id="body" placeholder="Email Body" rows="5" required></textarea>
+    <button type="submit">Send Email</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+document.getElementById("emailForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const to = document.getElementById("to").value;
+  const subject = document.getElementById("subject").value;
+  const body = document.getElementById("body").value;
+
+  const resultBox = document.getElementById("result");
+  resultBox.innerText = "📨 Sending email... please wait.";
+
+  try {
+    const res = await fetch("/api/sendEmail", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ to, subject, body })
+    });
+
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      data = { error: "Invalid JSON response from server." };
+    }
+
+    if (res.ok) {
+      resultBox.innerText = `✅ Success!\nMessage ID: ${data.messageId || "N/A"}`;
+    } else {
+      resultBox.innerText = `❌ Server Error:\n${data.error || "Unknown server error"}`;
+    }
+
+  } catch (err) {
+    // Print the *actual* network error message
+    resultBox.innerText = `❌ Network Error:\n${err?.message || err}\n\nFull error:\n${JSON.stringify(err, null, 2)}`;
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroReport - Reporting That's Pure Enchantment</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZFZH7SCK1B"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZFZH7SCK1B');
+</script>
+    <style>
+        /* ------------------- */
+        /* --- RESET & GLOBALS --- */
+        /* ------------------- */
+        :root {
+            --primary-purple: #7c3aed;
+            --primary-purple-dark: #6d28d9;
+            --accent-teal: #06b6d4;
+            --text-dark: #2e1065;
+            --text-light: #5b21b6;
+            --bg-white: #ffffff;
+            --bg-light-purple: #f5f3ff;
+            --border-color: #ede9fe;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        img, svg {
+            max-width: 100%;
+            display: block;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+        p { color: var(--text-light); opacity: 0.9; margin-bottom: 1rem; }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-purple);
+            transition: color 0.2s ease;
+        }
+        a:hover {
+            color: var(--primary-purple-dark);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        .section-header h2 { margin-bottom: 0.5rem; }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            padding: 0.85rem 1.75rem;
+            border-radius: 50px; /* Softer, pill-shaped buttons */
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: var(--bg-white);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-purple-dark);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background-color: var(--bg-light-purple);
+            border-color: var(--primary-purple);
+        }
+
+        /* --- FADE-IN ANIMATION --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ------------------- */
+        /* --- NAVIGATION BAR --- */
+        /* ------------------- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: box-shadow 0.2s ease;
+            border-bottom: 1px solid transparent;
+        }
+        .navbar.scrolled {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom-color: var(--border-color);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+        .logo:hover { color: var(--primary-purple); }
+
+        .nav-links { display: none; list-style: none; }
+        .nav-links a { color: var(--text-dark); font-weight: 500; padding: 0.5rem 1rem; }
+        .nav-links a:hover { color: var(--primary-purple); }
+        .nav-cta { display: none; }
+
+        .mobile-menu-toggle { display: block; cursor: pointer; background: none; border: none; }
+        .mobile-menu-toggle .icon-bar { display: block; width: 25px; height: 3px; background-color: var(--text-dark); margin: 5px 0; transition: all 0.3s ease; border-radius: 3px;}
+        
+        .mobile-nav-links { display: none; position: absolute; top: 70px; left: 0; right: 0; background-color: var(--bg-white); box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1rem; border-top: 1px solid var(--border-color); }
+        .mobile-nav-links.open { display: block; }
+        .mobile-nav-links ul { list-style: none; }
+        .mobile-nav-links li { margin-bottom: 1rem; }
+        .mobile-nav-links a { display: block; font-size: 1.1rem; color: var(--text-dark); font-weight: 500; }
+        .mobile-nav-links .btn { width: 100%; margin-top: 1rem; }
+        
+        .mobile-menu-toggle.open .icon-bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .mobile-menu-toggle.open .icon-bar:nth-child(2) { opacity: 0; }
+        .mobile-menu-toggle.open .icon-bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* ------------------- */
+        /* --- HERO SECTION --- */
+        /* ------------------- */
+        #hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: radial-gradient(circle at 10% 20%, #e9d5ff 0%, rgba(255,255,255,0) 25%),
+                        radial-gradient(circle at 80% 90%, #ccfbf1 0%, rgba(255,255,255,0) 25%);
+        }
+        .hero-content { display: flex; flex-direction: column; align-items: center; }
+        .hero-text { max-width: 650px; margin-bottom: 2rem; }
+        .hero-text h1 { margin-bottom: 1rem; color: var(--text-dark) }
+        .hero-text .subheadline { font-size: 1.1rem; max-width: 550px; margin: 0 auto 2rem; color: var(--text-light); }
+        .hero-ctas { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+        .hero-ctas .cta-secondary { font-weight: 600; }
+        .hero-image {
+            width: 100%; max-width: 700px; height: auto; margin-top: 3rem; border-radius: 16px; border: 1px solid var(--border-color); background: #fbfaff;
+            display: flex; align-items: center; justify-content: center; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.07);
+        }
+        .hero-image p { color: var(--text-light); font-weight: 500;}
+
+        /* ------------------- */
+        /* --- TRUSTED BY SECTION --- */
+        /* ------------------- */
+        #trusted-by { background-color: var(--bg-light-purple); padding: 2.5rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
+        .trusted-by-container { text-align: center; }
+        .trusted-by-container .title { font-weight: 600; color: var(--text-light); margin-bottom: 1.5rem; letter-spacing: 1px;}
+        .logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2.5rem; }
+        .logos span { font-weight: 600; font-size: 1.2rem; color: var(--text-dark); opacity: 0.6; transition: opacity 0.2s; }
+        .logos span:hover { opacity: 1; }
+
+        /* ------------------- */
+        /* --- VALUE PROPOSITION / FEATURES --- */
+        /* ------------------- */
+        .features-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        .feature-card { background-color: var(--bg-white); padding: 2rem; border-radius: 16px; border: 1px solid var(--border-color); transition: transform 0.3s, box-shadow 0.3s; }
+        .feature-card:hover { transform: translateY(-8px); box-shadow: 0 10px 30px rgba(0,0,0,0.07); }
+        .feature-card .icon { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; margin-bottom: 1rem; }
+        .feature-card:nth-child(1) .icon { background-color: #f5f3ff; color: #8b5cf6; }
+        .feature-card:nth-child(2) .icon { background-color: #ecfeff; color: #0891b2; }
+        .feature-card:nth-child(3) .icon { background-color: #fefce8; color: #eab308; }
+        .feature-card .icon svg { width: 24px; height: 24px; }
+        .feature-card h3 { margin-bottom: 0.5rem; }
+
+        /* ------------------- */
+        /* --- HOW IT WORKS --- */
+        /* ------------------- */
+        #how-it-works { background-color: var(--bg-light-purple); }
+        .steps-container { display: grid; grid-template-columns: 1fr; gap: 3rem; position: relative; }
+        .step { text-align: center; }
+        .step-number {
+            display: flex; align-items: center; justify-content: center; width: 60px; height: 60px;
+            margin: 0 auto 1rem; font-size: 1.5rem; font-weight: 700;
+            border-radius: 50%; background: var(--primary-purple); color: white;
+            box-shadow: 0 0 0 8px #f5f3ff;
+        }
+        .step h3 { margin-bottom: 0.5rem; }
+
+        /* ------------------- */
+        /* --- CASE STUDY / SOCIAL PROOF --- */
+        /* ------------------- */
+        #case-studies { background-color: var(--text-dark); color: var(--bg-white); }
+        .testimonial { max-width: 800px; margin: 0 auto; text-align: center; }
+        .testimonial blockquote { font-size: 1.5rem; font-weight: 600; line-height: 1.4; margin-bottom: 2rem; border: none; padding: 0; }
+        .testimonial cite { display: block; font-style: normal; }
+        .testimonial .author-name { font-weight: 600; }
+        .testimonial .author-title { color: #d1d5db; }
+        .testimonial .client-logo { margin: 1rem auto 0; font-weight: 700; font-size: 1.2rem; opacity: 0.7; letter-spacing: 1px; }
+
+        /* ------------------- */
+        /* --- PRICING --- */
+        /* ------------------- */
+        .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: stretch; }
+        .pricing-card { display: flex; flex-direction: column; border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; background-color: var(--bg-white); transition: transform 0.2s, box-shadow 0.2s; }
+        .pricing-card.highlighted { border-color: transparent; transform: scale(1.05); box-shadow: 0 10px 40px rgba(124, 58, 237, 0.2); border-top: 4px solid var(--accent-teal); }
+        .pricing-card .plan-name { font-size: 1.1rem; font-weight: 600; color: var(--primary-purple); }
+        .pricing-card .price { font-size: 2.5rem; font-weight: 800; margin: 1rem 0; color: var(--text-dark)}
+        .pricing-card .price span { font-size: 1rem; font-weight: 500; color: var(--text-light); }
+        .pricing-card .features-list { list-style: none; margin: 1.5rem 0; flex-grow: 1; }
+        .pricing-card .features-list li { margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-card .features-list .check-icon { color: var(--accent-teal); width: 20px; height: 20px; flex-shrink: 0; }
+        .pricing-card .btn { width: 100%; margin-top: auto; }
+
+        /* ------------------- */
+        /* --- FAQ SECTION --- */
+        /* ------------------- */
+        #faq { background-color: var(--bg-light-purple); }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { border-bottom: 1px solid var(--border-color); }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; cursor: pointer; width: 100%; background: none; border: none; text-align: left; }
+        .faq-question h3 { font-size: 1.1rem; font-weight: 600; }
+        .faq-icon { width: 20px; height: 20px; transition: transform 0.3s ease; flex-shrink: 0; margin-left: 1rem; color: var(--primary-purple) }
+        .faq-item.active .faq-icon { transform: rotate(135deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; }
+        .faq-answer p { padding-bottom: 1.5rem; }
+
+        /* ------------------- */
+        /* --- FINAL CTA BANNER --- */
+        /* ------------------- */
+        #final-cta {
+            background-image: linear-gradient(45deg, var(--primary-purple) 0%, var(--accent-teal) 100%);
+            color: var(--bg-white); text-align: center; border-radius: 20px; margin: 0 1rem 5rem 1rem;
+        }
+        #final-cta .container { padding: 4rem 1.5rem; }
+        #final-cta h2 { margin-bottom: 1.5rem; }
+        #final-cta p { color: #f0fdfa; max-width: 500px; margin: 0 auto 2rem; opacity: 1; }
+        #final-cta .btn { background-color: var(--bg-white); color: var(--primary-purple); padding: 1rem 2rem; font-size: 1.1rem; }
+        #final-cta .btn:hover { background-color: #f0f0f0; transform: translateY(-2px) scale(1.02); }
+
+        /* ------------------- */
+        /* --- FOOTER --- */
+        /* ------------------- */
+        .footer { background-color: var(--text-dark); color: #d1d5db; padding: 4rem 0; }
+        .footer-container { text-align: center; }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--bg-white); margin-bottom: 1rem; }
+        .footer-links { list-style: none; display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .footer-links a { color: #d1d5db; }
+        .footer-links a:hover { color: var(--bg-white); }
+        .social-icons { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2rem; }
+        .social-icons a svg { width: 24px; height: 24px; fill: #d1d5db; transition: fill 0.2s, transform 0.2s; }
+        .social-icons a:hover svg { fill: var(--bg-white); transform: scale(1.1); }
+        .copyright { font-size: 0.9rem; }
+
+        /* ------------------- */
+        /* --- RESPONSIVE STYLES --- */
+        /* ------------------- */
+        @media (min-width: 768px) {
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2.5rem; }
+            .section { padding: 6rem 0; }
+            
+            .mobile-menu-toggle, .mobile-nav-links { display: none !important; }
+            .nav-links { display: flex; align-items: center; gap: 0.5rem; }
+            .nav-cta { display: block; margin-left: 1rem; }
+
+            #hero { text-align: left; }
+            .hero-content { flex-direction: row; align-items: center; gap: 3rem; }
+            .hero-text { flex: 1; margin-bottom: 0; }
+            .hero-text h1, .hero-text .subheadline { margin-left: 0; margin-right: 0; }
+            .hero-ctas { flex-direction: row; gap: 1.5rem; }
+            .hero-image { flex: 1; margin-top: 0; }
+
+            .features-grid { grid-template-columns: repeat(3, 1fr); }
+            
+            .steps-container { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+            .step { text-align: left; }
+            .step-number { margin-left: 0; margin-right: 0; }
+            .steps-container::before { content: ''; position: absolute; top: 30px; left: 60px; right: 60px; height: 2px; background: repeating-linear-gradient(90deg, var(--border-color), var(--border-color) 6px, transparent 6px, transparent 12px); z-index: 0; }
+            .step-number { z-index: 1; }
+
+            .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+            
+            .footer-container { text-align: left; }
+            .footer-grid { display: flex; justify-content: space-between; align-items: center; }
+            .footer-links, .social-icons, .copyright { margin-bottom: 0; }
+            #final-cta { margin: 0 2rem 6rem 2rem; }
+        }
+        @media (min-width: 1024px) {
+            h1 { font-size: 3.5rem; }
+            h2 { font-size: 3rem; }
+            .section { padding: 7rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======================= -->
+    <!--      NAVIGATION BAR     -->
+    <!-- ======================= -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">ZeroReport</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#case-studies">Case Studies</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-cta">
+                <a href="#" class="btn btn-primary">Start Free Trial</a>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="mobile-nav-links">
+             <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#case-studies">Case Studies</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#" class="btn btn-primary">Start Free Trial</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ======================= -->
+        <!--        HERO SECTION     -->
+        <!-- ======================= -->
+        <section id="hero" class="section">
+            <div class="container hero-content">
+                <div class="hero-text fade-in">
+                    <h1>Unlock the Magic in Your Data: Reporting That's Pure Enchantment.</h1>
+                    <p class="subheadline">ZeroReport transforms scattered metrics into dazzling, client-ready stories that keep them enchanted with your work. It's not just a tool—it's your client retention spell.</p>
+                    <div class="hero-ctas">
+                        <a href="#" class="btn btn-primary">Start Free Trial</a>
+                        <a href="#" class="cta-secondary">Watch Demo →</a>
+                    </div>
+                </div>
+                <div class="hero-image fade-in" style="--delay: 0.2s;">
+                   <p>Show a before(spreadsheets) - after(a.i powered 2 pagers)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!--     TRUSTED BY SECTION    -->
+        <!-- ======================= -->
+        <section id="trusted-by">
+            <div class="container trusted-by-container">
+                <p class="title">LOVED BY THE MOST CREATIVE AGENCIES</p>
+                <div class="logos">
+                    <span>Storybook Inc</span>
+                    <span>DreamWeavers</span>
+                    <span>Pixie Dust ROI</span>
+                    <span>Metric Magic</span>
+                    <span>EverAfter Ads</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!--  VALUE PROP / FEATURES  -->
+        <!-- ======================= -->
+        <section id="features" class="section">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2>Your Wish is Our Command.</h2>
+                    <p>Stop wrestling with beastly spreadsheets or boring dashboards. Our ai-powered features are designed to make your reporting a fairy tale.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card fade-in">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c.621.206 1.213.435 1.762.712a4.5 4.5 0 016.38 6.38c-.277.549-.506 1.141-.712 1.762M9.75 3.104a4.5 4.5 0 00-6.38 6.38c.277.549.506 1.141.712 1.762m0 0l3.75 3.75a2.25 2.25 0 003.182 0l3.75-3.75M9.75 19.5h.008v.008H9.75v-.008z" /></svg>
+                        </div>
+                        <h3>Reports That Tell a Story</h3>
+                        <p>Clients ignore complex dashboards. They receive a concise, one-page narrative that highlights wins and reframes losses—making them feel confident in your reign.</p>
+                    </div>
+                    <div class="feature-card fade-in" style="--delay: 0.1s;">
+                        <div class="icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h3>Reclaim Your Time</h3>
+                        <p>Stop the monthly ritual of pulling data. We save you 10-20 hours a month, freeing your time for quests that actually grow your kingdom (and your revenue).</p>
+                    </div>
+                    <div class="feature-card fade-in" style="--delay: 0.2s;">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
+                        </div>
+                        <h3>Project Royal Authority</h3>
+                        <p>Our reports are crafted to project a premium, "$10M agency" level of professionalism that builds trust and justifies your retainers, making your work feel bespoke.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ======================= -->
+        <!--     HOW IT WORKS        -->
+        <!-- ======================= -->
+        <section id="how-it-works" class="section">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2>Bibbidi-Bobbidi-Boo! It's that simple.</h2>
+                </div>
+                <div class="steps-container">
+                    <div class="step fade-in">
+                        <div class="step-number">1</div>
+                        <h3>Fill a form</h3>
+                        <p>Connect your data, and describe your needs, our royal designers and coders will get straight to work to match your vibe.</p>
+                    </div>
+                    <div class="step fade-in" style="--delay: 0.1s;">
+                        <div class="step-number">2</div>
+                        <h3>Automate</h3>
+                        <p>Choose a custom made template, carefully crafted to match your branding</p>
+                    </div>
+                    <div class="step fade-in" style="--delay: 0.2s;">
+                        <div class="step-number">3</div>
+                        <h3>Share</h3>
+                        <p>set your schedule and Dazzle your clients with reports fit for a king and dashboards that tell a story.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!--       CASE STUDY        -->
+        <!-- ======================= -->
+        <section id="case-studies" class="section">
+            <div class="container">
+                <div class="testimonial fade-in">
+                    <blockquote>“Using ZeroReport feels like we have a secret magic wand for our data. Our clients are happier than ever, and we're saving countless hours. It's our happily ever after!”</blockquote>
+                    <cite>
+                        <span class="author-name">Cinderella</span>, <span class="author-title">Head of Marketing at Storybook Inc</span>
+                        <div class="client-logo">STORYBOOK INC</div>
+                    </cite>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ======================= -->
+        <!--         PRICING         -->
+        <!-- ======================= -->
+        <section id="pricing" class="section">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2>Find Your Perfect Fit.</h2>
+                    <p>Choose your adventure. Our plans are simple, with no evil curses or hidden fees.</p>
+                </div>
+                <div class="pricing-grid">
+                    <div class="pricing-card fade-in">
+                        <h3 class="plan-name">Apprentice</h3>
+                        <p class="price">$49<span>/mo</span></p>
+                        <p>Perfect for solo heroes and small teams starting their quest.</p>
+                        <ul class="features-list">
+                            <li><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg> 15 clients</li>
+                            <li><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg> Report Scheduling</li>
+                            <li><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg> Custom designs made for just you</li>
+                            <li><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg> Full branding</li>
+                            <li><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg> Ai insights baked in reports</li>
+                            <li><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg> Email support</li>
+                        </ul>
+                        <a href="#" class="btn btn-secondary">Begin Quest</a>
+                    </div>
+                    <div class="pricing-card highlighted fade-in" style="--delay: 0.1s;">
+                        <h3 class="plan-name">Sorcerer</h3>
+                        <p class="price">$199<span>/mo</span></p>
+                        <p>For legendary agencies and teams ready to rule the kingdom.</p>
+                         <ul class="features-list">
+                            <li><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg> Unlimited Clients</li>
+                            <li><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg> Everything in apprentice</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary">Choose Plan</a>
+                    </div>
+                </div> <!-- This closes .pricing-grid -->
+
+                <!-- START: New Guarantee Section -->
+                <div class="guarantee-box fade-in" style="margin-top: 4rem; text-align: center; border: 2px dashed var(--border-color); border-radius: 16px; padding: 2rem; background-color: var(--bg-light-purple);">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--text-dark);">Our Unbreakable Vow</h3>
+                    <p style="max-width: 600px; margin-left: auto; margin-right: auto;">Your quest for client retention is risk-free. If you don't save 10+ hours and feel more confident in keeping your clients within 30 days, <strong>our mages will work for free until you do.</strong> That is our promise.</p>
+                </div>
+                <!-- END: New Guarantee Section -->
+
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!--           FAQ           -->
+        <!-- ======================= -->
+        <section id="faq" class="section">
+            <div class="container">
+                 <div class="section-header fade-in">
+                    <h2>Spells & Answers</h2>
+                </div>
+                <div class="faq-container fade-in">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <h3>Which data kingdoms do you support?</h3>
+                            <svg class="faq-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We support all the great kingdoms: Google Ads, Google Analytics (GA4), Facebook Ads, Instagram Ads, LinkedIn Ads, and more. Our royal mages are always opening portals to new realms!</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <h3>Can I use my own royal crest on reports?</h3>
+                             <svg class="faq-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Absolutely! Our Sorcerer and Kingdom plans allow you to remove all ZeroReport branding and add your own logo, providing a seamless experience for your loyal subjects (clients).</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <h3>Is there a free trial period?</h3>
+                             <svg class="faq-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, we offer a 14-day free trial. Explore the entire kingdom, no dragon's gold (credit card) required. See if our magic fits your needs before you commit.</p>
+                        </div>
+                    </div>
+                     <div class="faq-item">
+                        <button class="faq-question">
+                            <h3>What is this "Unbreakable Vow" you speak of?</h3>
+                             <svg class="faq-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>It's our risk-free guarantee. We promise that within 30 days, you'll save at least 10 hours of manual work and feel a tangible increase in client confidence. If you don't, we will work for free to make it right. It removes all risk from trying our service.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!--      FINAL CTA          -->
+        <!-- ======================= -->
+        <section id="final-cta">
+            <div class="container fade-in">
+                <h2>Ready for Your Happily Ever After?</h2>
+                <p>Stop wrestling with data beasts. Start your free 14-day trial and bring a little magic to your reporting today.</p>
+                <a href="#" class="btn">Start Your Magical Journey</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================= -->
+    <!--          FOOTER         -->
+    <!-- ======================= -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-grid">
+                <div>
+                    <a href="#" class="footer-logo">ZeroReport</a>
+                    <p class="copyright">&copy; 2024 ZeroReport. All rights reserved.</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Scroll</a></li>
+                    <li><a href="#">Kingdom's Terms</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+                <div class="social-icons">
+                    <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // --- NAVBAR FUNCTIONALITY ---
+    const navbar = document.querySelector('.navbar');
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const mobileNavLinks = document.querySelector('.mobile-nav-links');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+    
+    mobileMenuToggle.addEventListener('click', () => {
+        mobileMenuToggle.classList.toggle('open');
+        mobileNavLinks.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+             mobileMenuToggle.classList.remove('open');
+             mobileNavLinks.classList.remove('open');
+        });
+    });
+
+    // --- SMOOTH SCROLL FOR NAV LINKS ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId.length > 1) { // Ensure it's not just "#"
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    });
+
+    // --- FAQ ACCORDION ---
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            faqItems.forEach(otherItem => {
+                otherItem.classList.remove('active');
+                otherItem.querySelector('.faq-answer').style.maxHeight = 0;
+            });
+            
+            if (!isActive) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            }
+        });
+    });
+
+    // --- ANIMATIONS ON SCROLL ---
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const delay = el.style.getPropertyValue('--delay') || '0s';
+                el.style.transitionDelay = delay;
+                el.classList.add('is-visible');
+                observer.unobserve(el);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+
+});
+</script>
+
+</body>
+</html>

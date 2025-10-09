@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Financial Summary Report | 2025-09-01 to 2025-09-09</title>
+    <!-- Google Fonts for a modern, professional look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* --- Root Variables for Theming --- */
+        :root {
+            --bg-color: #0e0e1e; /* Deeper Dark Blue */
+            --text-color: #e0e0e0; /* Light Grey */
+            --header-color: #f8f8f8; /* Brighter for main headings */
+            --accent-color: #00bcd4; /* Vibrant Cyan for highlights and branding */
+            --accent-light: #4dd0e1; /* Lighter cyan */
+            --card-bg: #1a1a2e; /* Slightly lighter dark blue for cards/sections */
+            --border-color: #2e2e4a; /* Even lighter dark blue for subtle borders */
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --positive-color: #4CAF50; /* Green for income */
+            --negative-color: #F44336; /* Red for expenses */
+            --neutral-color: #888888; /* Grey for neutral */
+            --font-family-body: 'IBM Plex Sans', sans-serif;
+            --font-family-mono: 'IBM Plex Mono', monospace;
+            --spacing-unit: 1rem;
+        }
+
+        /* --- Global Body Styles --- */
+        body {
+            font-family: var(--font-family-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: calc(2 * var(--spacing-unit)); /* 2rem padding */
+            line-height: 1.6;
+            display: flex; /* Centers the report container */
+            justify-content: center;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* --- Report Container --- */
+        .report-container {
+            max-width: 960px; /* Slightly wider for more content */
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: 16px; /* More rounded corners */
+            box-shadow: 0 15px 40px var(--shadow-color);
+            padding: calc(4 * var(--spacing-unit)); /* 4rem padding */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+            position: relative;
+            overflow: hidden; /* Ensures no content leaks outside rounded corners */
+        }
+
+        /* Subtle background texture/gradient for professionalism */
+        .report-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 10% 10%, rgba(0, 188, 212, 0.05) 0%, transparent 20%),
+                        radial-gradient(circle at 90% 90%, rgba(0, 188, 212, 0.05) 0%, transparent 20%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3, h4 {
+            color: var(--header-color);
+            margin-top: 1.8em;
+            margin-bottom: 0.8em;
+            font-weight: 600;
+            line-height: 1.2;
+            position: relative; /* For potential pseudo-elements */
+            z-index: 1; /* Ensure text is above background pseudo-element */
+        }
+
+        h1 {
+            font-size: clamp(2em, 4vw, 2.8em); /* Responsive font size */
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 0.7em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding-bottom: 0.3em;
+            border-bottom: 2px solid var(--accent-color); /* Stronger separator */
+            display: inline-block; /* To make border-bottom only as wide as text */
+            margin-left: auto;
+            margin-right: auto;
+            white-space: nowrap; /* Prevent title from breaking */
+            max-width: 100%; /* Ensure it fits */
+        }
+
+        h2 {
+            font-size: clamp(1.6em, 3vw, 2.2em);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-top: 2.5em;
+            color: var(--accent-light); /* H2s in a slightly different accent shade */
+            letter-spacing: 0.03em;
+        }
+
+        h3 {
+            font-size: clamp(1.2em, 2.5vw, 1.6em);
+            color: var(--header-color);
+            margin-top: 2em;
+            position: relative;
+            padding-left: 1.5em; /* Space for custom bullet/icon */
+        }
+        h3::before {
+            content: '\f058'; /* Check circle icon from Font Awesome */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+        }
+
+
+        p {
+            margin-bottom: 1.2em;
+            opacity: 0.85;
+        }
+
+        .header-meta {
+            text-align: center;
+            font-size: 0.95em;
+            color: var(--text-color);
+            margin-bottom: 1.5em;
+            opacity: 0.6;
+            letter-spacing: 0.02em;
+        }
+        
+        /* Agency Brand / Logo Placeholder */
+        .agency-logo {
+            text-align: center;
+            margin-bottom: 1.5em;
+            opacity: 0.7;
+            font-size: 1.2em;
+            color: var(--accent-light);
+            font-weight: 700;
+        }
+        .agency-logo i {
+            margin-right: 8px;
+            color: var(--accent-color);
+        }
+
+        /* --- Key Metrics Section --- */
+        .key-metrics {
+            display: grid; /* Use grid for better control */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adapt based on content */
+            gap: calc(2 * var(--spacing-unit));
+            margin: calc(4 * var(--spacing-unit)) 0;
+            justify-content: center; /* Center items if they don't fill the grid */
+        }
+
+        .metric-card {
+            background-color: var(--bg-color);
+            border-radius: 10px;
+            padding: calc(2 * var(--spacing-unit));
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card::before { /* Subtle background highlight */
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.05;
+            transition: opacity 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--shadow-color);
+        }
+        .metric-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .metric-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+            color: var(--accent-light);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .metric-card h3 i {
+            margin-right: 10px;
+            font-size: 0.9em;
+            color: var(--accent-color);
+        }
+
+        .metric-value {
+            font-family: var(--font-family-mono); /* Monospace for financial figures */
+            font-size: clamp(2em, 5vw, 3.2em); /* Responsive font size */
+            font-weight: 700;
+            color: var(--text-color);
+            display: block;
+            margin-top: 0.2em;
+        }
+        .metric-value.income { color: var(--positive-color); }
+        .metric-value.expense { color: var(--negative-color); }
+        .metric-value.net-savings { 
+            color: var(--accent-color); 
+            background: linear-gradient(45deg, var(--accent-color) 30%, var(--accent-light) 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: clamp(2.5em, 6vw, 3.8em); /* Larger for Net Savings */
+            animation: pulse-savings 2s infinite alternate; /* Subtle animation */
+        }
+        @keyframes pulse-savings {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.03); opacity: 0.95; }
+        }
+
+        /* --- Income vs. Expenses Chart (CSS-only visualization) --- */
+        .income-expense-chart {
+            margin: calc(4 * var(--spacing-unit)) 0;
+            background-color: var(--bg-color);
+            border-radius: 10px;
+            padding: calc(2 * var(--spacing-unit));
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .chart-bar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            height: 35px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            background-color: rgba(255,255,255,0.05); /* Base track */
+            color: var(--text-color);
+            font-family: var(--font-family-mono);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        .chart-bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: width 1s ease-out; /* Animation for bar fill */
+            position: relative;
+            z-index: 1; /* Ensure fill is above base track, but labels can be above it */
+        }
+        .chart-bar-label {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2; /* Above fill */
+        }
+        .chart-bar-title {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        .chart-bar.income .chart-bar-fill {
+            background-color: var(--positive-color);
+        }
+        .chart-bar.expense .chart-bar-fill {
+            background-color: var(--negative-color);
+        }
+        .chart-bar.net-savings .chart-bar-fill {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+            color: var(--bg-color); /* Text on savings bar */
+        }
+
+        /* --- Tables --- */
+        table {
+            width: 100%;
+            border-collapse: separate; /* For rounded corners on cells */
+            border-spacing: 0;
+            margin: calc(2 * var(--spacing-unit)) 0;
+            font-size: 0.95em;
+            text-align: left;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+            border-radius: 10px; /* More rounded */
+            overflow: hidden; /* Ensures border-radius is applied to table children */
+            border: 1px solid var(--border-color); /* Overall table border */
+        }
+
+        table thead tr {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        table thead th {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            background-image: linear-gradient(to right, var(--accent-color), var(--accent-light)); /* Gradient header */
+        }
+        table thead th:first-child { border-top-left-radius: 10px; }
+        table thead th:last-child { border-top-right-radius: 10px; }
+
+        table th, table td {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table tbody tr {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        table tbody tr:nth-of-type(even) {
+            background-color: var(--bg-color); /* Subtle alternating row color */
+        }
+
+        table tbody tr:hover {
+            background-color: #3e3e60; /* Slightly lighter hover for dark theme */
+            transform: scale(1.005);
+        }
+
+        table tbody tr:last-of-type td {
+            border-bottom: none;
+        }
+        table tbody tr:last-of-type td:first-child { border-bottom-left-radius: 10px; }
+        table tbody tr:last-of-type td:last-child { border-bottom-right-radius: 10px; }
+        
+        /* Specific coloring for amounts */
+        .amount-positive { color: var(--positive-color); font-weight: 600; font-family: var(--font-family-mono); }
+        .amount-negative { color: var(--negative-color); font-weight: 600; font-family: var(--font-family-mono); }
+        .amount-neutral { color: var(--text-color); font-weight: 500; font-family: var(--font-family-mono); }
+
+        /* --- Lists (Recommendations) --- */
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 30px; /* More space for custom bullet */
+            margin-bottom: 12px;
+            font-size: 0.98em;
+            line-height: 1.5;
+        }
+
+        ul li::before {
+            content: '\f00c'; /* Checkmark icon from Font Awesome */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-size: 1em;
+            line-height: 1.5; /* Align with text */
+            top: 0;
+        }
+
+        /* --- Recommendations Section --- */
+        .recommendations {
+            margin-top: calc(2 * var(--spacing-unit));
+            background-color: var(--bg-color);
+            border-left: 6px solid var(--accent-color); /* Thicker accent border */
+            padding: calc(2 * var(--spacing-unit)) calc(2.5 * var(--spacing-unit));
+            border-radius: 0 10px 10px 0; /* Only right side rounded */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .recommendations ul li {
+            margin-bottom: 18px;
+            color: var(--text-color);
+        }
+        .recommendations ul li strong {
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+
+        /* --- Footer --- */
+        .report-footer {
+            text-align: center;
+            margin-top: calc(5 * var(--spacing-unit));
+            padding-top: calc(2 * var(--spacing-unit));
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85em;
+            color: var(--text-color);
+            opacity: 0.6;
+            letter-spacing: 0.05em;
+            font-family: var(--font-family-mono);
+        }
+
+        /* --- Responsive Adjustments (Mobile First) --- */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-unit); /* 1rem padding */
+            }
+            .report-container {
+                padding: calc(2 * var(--spacing-unit)); /* 2rem padding */
+                border-radius: 12px;
+            }
+            h1 {
+                font-size: 1.8em;
+                letter-spacing: 0.05em;
+                border-bottom: 1px solid var(--accent-color);
+                padding-bottom: 0.5em;
+            }
+            h2 {
+                font-size: 1.5em;
+                padding-bottom: 8px;
+            }
+            h3 {
+                font-size: 1.1em;
+            }
+            .key-metrics {
+                grid-template-columns: 1fr; /* Stack metric cards vertically */
+            }
+            .metric-card {
+                padding: calc(1.5 * var(--spacing-unit));
+            }
+            .metric-card h3 {
+                font-size: 1.1em;
+            }
+            .metric-value {
+                font-size: 2.2em;
+            }
+            .metric-value.net-savings {
+                font-size: 2.8em;
+            }
+            table th, table td {
+                padding: 10px 15px;
+            }
+            
+            /* Responsive Table: Stack headers and data */
+            table, thead, tbody, th, td, tr {
+                display: block; /* Make table elements behave like block elements */
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px; /* Hide table headers visually */
+                left: -9999px;
+            }
+            tr { 
+                border: 1px solid var(--border-color); 
+                margin-bottom: calc(var(--spacing-unit) * 1.5); 
+                border-radius: 8px;
+                background-color: var(--card-bg); /* Ensure row background for stacked items */
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            td {
+                border: none; /* Remove individual cell borders */
+                position: relative;
+                padding-left: 50%; /* Make space for data-label */
+                text-align: right;
+                display: flex; /* Use flex to align label and value */
+                justify-content: space-between;
+                align-items: center;
+                min-height: 40px; /* Ensure sufficient height */
+            }
+            td::before {
+                content: attr(data-label); /* Use data-label for pseudo-elements */
+                position: absolute; /* Position it absolutely within the flex item */
+                left: 15px;
+                width: auto; /* Let content dictate width */
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 600;
+                color: var(--accent-light); /* Accent color for labels */
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            table tbody tr:nth-of-type(even) { /* Reset alternating background for stacked rows */
+                background-color: var(--card-bg); 
+            }
+            table tbody tr:last-of-type td:first-child { border-bottom-left-radius: 0; }
+            table tbody tr:last-of-type td:last-child { border-bottom-right-radius: 0; }
+            table {
+                border: none; /* Remove overall table border */
+                box-shadow: none;
+            }
+            .recommendations {
+                padding: calc(1.5 * var(--spacing-unit));
+            }
+        }
+        
+        /* --- Print Styles --- */
+        @media print {
+            @page {
+                size: A4;
+                margin: 20mm; /* Standard A4 margins */
+            }
+
+            /* Reset dark mode for print */
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact; /* Crucial for background-color to print */
+                print-color-adjust: exact;
+                padding: 0;
+                display: block; /* Remove flexbox for print layout */
+                font-size: 10pt; /* Optimal font size for print */
+                min-height: auto;
+                overflow-x: visible;
+            }
+
+            .report-container {
+                max-width: 100%;
+                width: 100%;
+                background-color: #ffffff !important;
+                box-shadow: none !important; /* Remove shadows */
+                border-radius: 0;
+                padding: 0;
+                position: static; /* Remove position relative for print */
+                overflow: visible;
+            }
+            .report-container::before {
+                content: none !important; /* Hide subtle background texture */
+            }
+
+            /* Adjust heading colors for print */
+            h1, h2, h3, h4 {
+                color: #333333 !important;
+                border-color: #cccccc !important;
+                margin-top: 1.5em;
+                margin-bottom: 0.6em;
+            }
+
+            h1 {
+                color: #0056b3 !important; /* A professional blue for print title */
+                border-bottom: 1px solid #e0e0e0 !important;
+                padding-bottom: 8px !important;
+                margin-bottom: 1.5em !important;
+                font-size: 2em;
+                display: block; /* Allow border to span full width */
+            }
+            h2 {
+                border-bottom: 1px solid #cccccc !important;
+                padding-bottom: 5px !important;
+                color: #0056b3 !important;
+                font-size: 1.6em;
+            }
+            h3 {
+                color: #0056b3 !important;
+                font-size: 1.3em;
+            }
+            h3::before {
+                color: #0056b3 !important;
+            }
+
+            .agency-logo {
+                color: #666666 !important;
+                opacity: 1 !important;
+            }
+            .agency-logo i {
+                color: #0056b3 !important;
+            }
+
+            .header-meta, p, ul, li {
+                color: #333333 !important;
+                opacity: 1;
+            }
+
+            /* Metric Cards for Print */
+            .key-metrics {
+                grid-template-columns: repeat(3, 1fr) !important; /* Force 3 columns */
+                gap: 15px !important;
+                page-break-inside: avoid; /* Keep key metrics together */
+                margin: 30px 0 !important;
+            }
+
+            .metric-card {
+                background-color: #f8f8f8 !important; /* Light background for metric cards */
+                border: 1px solid #e0e0e0 !important;
+                box-shadow: none !important;
+                color: #333333 !important;
+                padding: 15px !important;
+                transform: none !important; /* Remove hover transform */
+            }
+            .metric-card::before {
+                content: none !important; /* Hide subtle background highlight */
+            }
+            .metric-card h3 {
+                color: #0056b3 !important;
+                font-size: 1em !important;
+            }
+            .metric-card h3 i {
+                color: #0056b3 !important;
+            }
+            .metric-value {
+                color: #333333 !important;
+                font-size: 2em !important;
+                -webkit-background-clip: unset !important;
+                -webkit-text-fill-color: unset !important;
+                animation: none !important;
+            }
+            /* Specific colors for metrics in print */
+            .metric-value.income { color: #28a745 !important; } /* Green */
+            .metric-value.expense { color: #dc3545 !important; } /* Red */
+            .metric-value.net-savings { color: #0056b3 !important; font-size: 2.5em !important; } /* Blue */
+
+            /* Chart Print Styles */
+            .income-expense-chart {
+                background-color: #f8f8f8 !important;
+                border: 1px solid #e0e0e0 !important;
+                box-shadow: none !important;
+                padding: 15px !important;
+            }
+            .chart-bar-fill {
+                background-color: #ccc !important; /* Neutral background for print */
+                color: #333 !important; /* Ensure text is readable */
+            }
+            .chart-bar.income .chart-bar-fill { background-color: #92d194 !important; } /* Lighter green */
+            .chart-bar.expense .chart-bar-fill { background-color: #ff9999 !important; } /* Lighter red */
+            .chart-bar.net-savings .chart-bar-fill { background: #91c7f5 !important; color: #333 !important; } /* Lighter blue */
+
+
+            /* Table Print Styles */
+            table {
+                box-shadow: none !important;
+                border: 1px solid #e0e0e0 !important;
+                page-break-inside: auto; /* Allow tables to break across pages */
+                border-radius: 0;
+            }
+            table thead tr {
+                background-color: #e0e0e0 !important;
+                color: #333333 !important;
+            }
+            table thead th {
+                 background-image: none !important; /* Remove gradient */
+                 border-top-left-radius: 0 !important;
+                 border-top-right-radius: 0 !important;
+            }
+            table th, table td {
+                border-bottom: 1px solid #e0e0e0 !important;
+                color: #333333 !important;
+                padding: 8px 10px !important;
+            }
+            table tbody tr {
+                background-color: #ffffff !important;
+            }
+            table tbody tr:nth-of-type(even) {
+                background-color: #f2f2f2 !important;
+            }
+            table tbody tr:hover {
+                background-color: #f2f2f2 !important; /* Remove hover effect for print */
+                transform: none !important;
+            }
+            table tbody tr:last-of-type td:first-child { border-bottom-left-radius: 0 !important; }
+            table tbody tr:last-of-type td:last-child { border-bottom-right-radius: 0 !important; }
+
+            .amount-positive { color: #28a745 !important; }
+            .amount-negative { color: #dc3545 !important; }
+            .amount-neutral { color: #333333 !important; }
+
+            ul li::before {
+                color: #0056b3 !important; /* Blue bullets for print */
+            }
+
+            .recommendations {
+                background-color: #f8f8f8 !important;
+                border-left: 4px solid #0056b3 !important;
+                padding: 15px 20px !important;
+                border-radius: 0 !important;
+            }
+            .recommendations ul li strong {
+                color: #333333 !important;
+            }
+
+            .report-footer {
+                border-top: 1px solid #e0e0e0 !important;
+                color: #666666 !important;
+                margin-top: 40px !important;
+                opacity: 1;
+            }
+            
+            /* Ensure content does not break abruptly across pages */
+            h2, h3 { page-break-after: avoid; }
+            ul, ol, table, .key-metrics, .summary p, .income-expense-chart { page-break-inside: avoid; }
+
+            /* Reset responsive table for print, ensuring full table layout */
+            @media (max-width: 768px) {
+                table, thead, tbody, th, td, tr {
+                    display: table !important; /* Revert to standard table display */
+                    border: none !important;
+                }
+                thead tr {
+                    position: relative !important;
+                    top: unset !important;
+                    left: unset !important;
+                }
+                tr { 
+                    border: none !important; 
+                    margin-bottom: 0 !important; 
+                    border-radius: 0 !important;
+                    box-shadow: none !important;
+                }
+                td {
+                    border: 1px solid #e0e0e0 !important; /* Restore cell borders */
+                    position: relative !important;
+                    padding-left: unset !important;
+                    text-align: left !important;
+                    display: table-cell !important;
+                    min-height: auto !important;
+                }
+                td::before {
+                    content: none !important; /* Hide data-label pseudo-elements */
+                }
+                table thead th:first-child { border-top-left-radius: 0 !important; }
+                table thead th:last-child { border-top-right-radius: 0 !important; }
+                table tbody tr:last-of-type td:first-child { border-bottom-left-radius: 0 !important; }
+                table tbody tr:last-of-type td:last-child { border-bottom-right-radius: 0 !important; }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <header>
+            <div class="agency-logo"><i class="fas fa-chart-line"></i> ZeroReport Insights</div>
+            <h1>Weekly Financial Summary Report</h1>
+            <p class="header-meta">Reporting Period: 2025-09-01 to 2025-09-09</p>
+            <p class="header-meta" id="generated-date">Generated On: </p>
+        </header>
+
+        <section class="summary">
+            <h2>Executive Summary</h2>
+            <p>
+                This report provides a concise overview of your financial activity for the week of September 1st to September 9th, 2025.
+                During this period, you demonstrated a strong net savings position, largely driven by significant income from your salary and an additional freelance project.
+                While overall expenses were well managed, a significant portion was allocated to housing. This summary highlights key financial metrics and offers
+                actionable insights for potential optimization in the coming weeks.
+            </p>
+
+            <div class="key-metrics">
+                <div class="metric-card">
+                    <h3><i class="fas fa-arrow-alt-circle-up"></i> Total Income</h3>
+                    <span class="metric-value income" data-value="5827">$5,827</span>
+                </div>
+                <div class="metric-card">
+                    <h3><i class="fas fa-arrow-alt-circle-down"></i> Total Expenses</h3>
+                    <span class="metric-value expense" data-value="1960">-$1,960</span>
+                </div>
+                <div class="metric-card">
+                    <h3><i class="fas fa-piggy-bank"></i> Net Savings</h3>
+                    <span class="metric-value net-savings" data-value="3867">$3,867</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="visual-summary">
+            <h2>Financial Overview: Income vs. Expenses</h2>
+            <p>A visual representation of your financial flows, clearly showing the significant difference between your total income and total expenses for the week.</p>
+
+            <div class="income-expense-chart">
+                <div class="chart-bar-container">
+                    <div class="chart-bar income">
+                        <div class="chart-bar-fill">
+                            <span class="chart-bar-title">Income</span>
+                        </div>
+                        <span class="chart-bar-label amount-positive">$5,827</span>
+                    </div>
+                    <div class="chart-bar expense">
+                        <div class="chart-bar-fill">
+                            <span class="chart-bar-title">Expenses</span>
+                        </div>
+                        <span class="chart-bar-label amount-negative">-$1,960</span>
+                    </div>
+                    <div class="chart-bar net-savings">
+                        <div class="chart-bar-fill">
+                            <span class="chart-bar-title">Net Savings</span>
+                        </div>
+                        <span class="chart-bar-label amount-positive">$3,867</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="transactions">
+            <h2>Detailed Transactions</h2>
+            <p>Below is a granular breakdown of all financial transactions recorded during the reporting period, categorized for clarity:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Account</th>
+                        <th>Category</th>
+                        <th>Transaction</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Date">2025-09-01</td>
+                        <td data-label="Account">Checking</td>
+                        <td data-label="Category">Income</td>
+                        <td data-label="Transaction">Salary</td>
+                        <td data-label="Amount" class="amount-positive">+$5,000</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2025-09-02</td>
+                        <td data-label="Account">Checking</td>
+                        <td data-label="Category">Expense</td>
+                        <td data-label="Transaction">Rent</td>
+                        <td data-label="Amount" class="amount-negative">-$1,200</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2025-09-03</td>
+                        <td data-label="Account">Checking</td>
+                        <td data-label="Category">Expense</td>
+                        <td data-label="Transaction">Groceries</td>
+                        <td data-label="Amount" class="amount-negative">-$350</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2025-09-04</td>
+                        <td data-label="Account">Savings</td>
+                        <td data-label="Category">Income</td>
+                        <td data-label="Transaction">Interest</td>
+                        <td data-label="Amount" class="amount-positive">+$15</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2025-09-05</td>
+                        <td data-label="Account">Checking</td>
+                        <td data-label="Category">Expense</td>
+                        <td data-label="Transaction">Utilities</td>
+                        <td data-label="Amount" class="amount-negative">-$200</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2025-09-06</td>
+                        <td data-label="Account">Checking</td>
+                        <td data-label="Category">Income</td>
+                        <td data-label="Transaction">Freelance Project</td>
+                        <td data-label="Amount" class="amount-positive">+$800</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2025-09-07</td>
+                        <td data-label="Account">Checking</td>
+                        <td data-label="Category">Expense</td>
+                        <td data-label="Transaction">Entertainment</td>
+                        <td data-label="Amount" class="amount-negative">-$150</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2025-09-08</td>
+                        <td data-label="Account">Checking</td>
+                        <td data-label="Category">Expense</td>
+                        <td data-label="Transaction">Transport</td>
+                        <td data-label="Amount" class="amount-negative">-$60</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2025-09-09</td>
+                        <td data-label="Account">Savings</td>
+                        <td data-label="Category">Income</td>
+                        <td data-label="Transaction">Interest</td>
+                        <td data-label="Amount" class="amount-positive">+$12</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="expense-breakdown">
+            <h2>Expense Breakdown by Category</h2>
+            <p>Understanding where your money goes is crucial for effective budgeting. Here's a concise look at your spending, grouped by category, highlighting key areas:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Amount Spent</th>
+                        <th>% of Total Expenses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Category">Rent</td>
+                        <td data-label="Amount Spent" class="amount-negative">-$1,200</td>
+                        <td data-label="% of Total Expenses" class="amount-neutral">61.2%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Category">Groceries</td>
+                        <td data-label="Amount Spent" class="amount-negative">-$350</td>
+                        <td data-label="% of Total Expenses" class="amount-neutral">17.9%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Category">Utilities</td>
+                        <td data-label="Amount Spent" class="amount-negative">-$200</td>
+                        <td data-label="% of Total Expenses" class="amount-neutral">10.2%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Category">Entertainment</td>
+                        <td data-label="Amount Spent" class="amount-negative">-$150</td>
+                        <td data-label="% of Total Expenses" class="amount-neutral">7.7%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Category">Transport</td>
+                        <td data-label="Amount Spent" class="amount-negative">-$60</td>
+                        <td data-label="% of Total Expenses" class="amount-neutral">3.1%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="insights">
+            <h2>Key Insights & Strategic Recommendations</h2>
+
+            <h3>Actionable Recommendations for Enhancing Savings</h3>
+            <div class="recommendations">
+                <ul>
+                    <li><strong>Groceries ($350):</strong> As your second-largest expense, this category offers considerable flexibility. Strategize by planning meals for the week, prioritizing bulk purchases for staples, actively utilizing loyalty programs, and consciously reducing impulse buys. Aiming for a 10-20% reduction here is a realistic goal.</li>
+                    <li><strong>Utilities ($200):</strong> Review and optimize your household energy consumption. Small adjustments, such as unplugging electronics, transitioning to energy-efficient lighting, and fine-tuning thermostat settings, can lead to measurable savings over time.</li>
+                    <li><strong>Entertainment ($150):</strong> While essential for well-being, this discretionary category presents an opportunity for optimization. Explore free or lower-cost entertainment alternatives (e.g., public parks, free community events, library resources) or establish a stricter weekly budget for leisure activities.</li>
+                    <li><strong>Transport ($60):</strong> Evaluate your weekly travel patterns. Consider consolidating errands into fewer trips, exploring public transportation options, or integrating walking/biking for shorter distances to reduce fuel costs and vehicle wear.</li>
+                    <li><strong>Subscription Audit:</strong> Though not explicitly detailed in this week's data, a periodic review of all recurring subscriptions (streaming services, apps, gym memberships, etc.) is highly recommended. Cancel any services that are underutilized or no longer provide significant value.</li>
+                </ul>
+            </div>
+            <p>
+                By proactively addressing these adjustable expense categories, you hold the potential to further amplify your net savings and strengthen your financial position in the forthcoming reporting periods.
+            </p>
+        </section>
+
+        <footer class="report-footer">
+            Report Generated by ZeroReport | &copy; 2025. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script>
+        // Dynamically set the current date in the footer
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateElement = document.getElementById('generated-date');
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            dateElement.textContent = `Generated On: ${today.toLocaleDateString('en-US', options)}`;
+        });
+
+        // Optional: Animate metric cards on scroll/load for a subtle dynamic effect
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // Trigger when 10% of the item is visible
+        };
+
+        const metricObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.metric-card').forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)'; // Start slightly below
+            card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            metricObserver.observe(card);
+        });
+
+        // Calculate and set chart bar widths dynamically based on data-value attributes
+        const setChartBarWidths = () => {
+            const totalIncome = parseFloat(document.querySelector('.metric-value.income').dataset.value);
+            const totalExpenses = parseFloat(document.querySelector('.metric-value.expense').dataset.value);
+            const netSavings = parseFloat(document.querySelector('.metric-value.net-savings').dataset.value);
+
+            // We'll normalize against the highest positive value (income) for visual scaling
+            // This ensures bars are relative to the 'total income' as the maximum potential.
+            const maxVal = totalIncome; 
+
+            document.querySelector('.chart-bar.income .chart-bar-fill').style.width = 
+                `${(totalIncome / maxVal * 100).toFixed(1)}%`;
+            document.querySelector('.chart-bar.expense .chart-bar-fill').style.width = 
+                `${(totalExpenses / maxVal * 100).toFixed(1)}%`;
+            document.querySelector('.chart-bar.net-savings .chart-bar-fill').style.width = 
+                `${(netSavings / maxVal * 100).toFixed(1)}%`;
+        };
+
+        document.addEventListener('DOMContentLoaded', setChartBarWidths);
+    </script>
+</body>
+</html>

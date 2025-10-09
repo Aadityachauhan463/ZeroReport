@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vercel API Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Vercel Serverless API Demo</h1>
+    <p>Click the button to ping your backend endpoint:</p>
+
+    <button id="ping-btn">Ping Backend</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById("ping-btn").addEventListener("click", async () => {
+      document.getElementById("result").innerText = "Contacting backend...";
+      const res = await fetch("/api/hello"); // calls your serverless function
+      const data = await res.json();
+      document.getElementById("result").innerText =
+        `✅ Message: ${data.message}\n🕒 Time: ${data.time}`;
+    });
+  </script>
+</body>
+</html>

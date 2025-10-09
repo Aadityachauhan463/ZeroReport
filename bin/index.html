@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Sigma Firebase</title>
+  </head>
+  <body>
+    <h1>🔥 Sigma Firebase App 🔥</h1>
+
+    <button id="signup">Sign Up</button>
+    <button id="addData">Add Data</button>
+
+    <h2>Upload a File</h2>
+    <input type="file" id="fileInput" />
+    <button id="uploadBtn">Upload to Firebase</button>
+    <p id="uploadStatus"></p>
+
+    <script type="module">
+      // -------------------------------
+      // IMPORT FIREBASE SDKs
+      // -------------------------------
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+      import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+      import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
+
+      // -------------------------------
+      // FIREBASE CONFIG
+      // -------------------------------
+      const firebaseConfig = {
+        apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
+        authDomain: "sigma-app-e9397.firebaseapp.com",
+        projectId: "sigma-app-e9397",
+        storageBucket: "sigma-app-e9397.appspot.com",
+        messagingSenderId: "561606435145",
+        appId: "1:561606435145:web:c68e3629ce50215f177a98",
+        measurementId: "G-1KG5C55LEB",
+      };
+
+      // -------------------------------
+      // INITIALIZE FIREBASE
+      // -------------------------------
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+
+      // -------------------------------
+      // ENSURE DOM IS LOADED BEFORE ATTACHING LISTENERS
+      // -------------------------------
+      window.onload = () => {
+        const signupBtn = document.getElementById("signup");
+        const addDataBtn = document.getElementById("addData");
+        const fileInput = document.getElementById("fileInput");
+        const uploadBtn = document.getElementById("uploadBtn");
+        const uploadStatus = document.getElementById("uploadStatus");
+
+        // --------- AUTH SIGNUP ---------
+        signupBtn.addEventListener("click", async () => {
+          try {
+            const userCred = await createUserWithEmailAndPassword(auth, "sigma@chad.com", "123456");
+            console.log("🔥 Signed up:", userCred.user.email);
+          } catch (err) {
+            console.error("Signup error:", err.message);
+          }
+        });
+
+        // --------- FIRESTORE ADD DATA ---------
+        addDataBtn.addEventListener("click", async () => {
+          try {
+            await addDoc(collection(db, "notes"), {
+              text: "Grind never stops 💪",
+              time: new Date(),
+            });
+            console.log("✅ Data added successfully!");
+          } catch (err) {
+            console.error("DB error:", err.message);
+          }
+        });
+
+        // --------- STORAGE FILE UPLOAD ---------
+        uploadBtn.addEventListener("click", async () => {
+          const file = fileInput.files[0];
+          if (!file) return alert("Select a file first bro 😎");
+
+          uploadStatus.innerText = "⏳ Uploading...";
+
+          try {
+            // Upload file
+            const storageRef = ref(storage, "uploads/" + file.name);
+            await uploadBytes(storageRef, file);
+
+            // Get public URL
+            const url = await getDownloadURL(storageRef);
+            console.log("🔥 File URL:", url);
+
+            // Save metadata to Firestore
+            await addDoc(collection(db, "files"), {
+              name: file.name,
+              url: url,
+              uploadedAt: new Date(),
+              user: auth.currentUser?.uid || "anon",
+            });
+
+            uploadStatus.innerText = "✅ Upload complete!";
+            console.log("✅ File metadata saved to Firestore!");
+          } catch (err) {
+            console.error("Upload error:", err.message);
+            uploadStatus.innerText = "❌ Upload failed!";
+          }
+        });
+      };
+    </script>
+  </body>
+</html>

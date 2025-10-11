@@ -662,6 +662,27 @@
     </footer>
 
     <script>
+
+        // redirect to main app if user UID is detected.
+
+        // --- Helper to read cookie ---
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    const [key, val] = cookie.trim().split('=');
+    if (key === name) return decodeURIComponent(val);
+  }
+  return null;
+}
+
+// --- Redirect if user is already logged in ---
+window.addEventListener("DOMContentLoaded", () => {
+  const uid = getCookie("uid");
+  if (uid) {
+    console.log("UID detected, redirecting to app:", uid);
+    window.location.href = "/mainApp.html"; // change this to your main app path
+  }
+});
         // Generate floating particles
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 30; i++) {

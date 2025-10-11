@@ -589,6 +589,26 @@
     </div>
     
     <script>
+        // --- Cookie helper ---
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    const [key, val] = cookie.trim().split('=');
+    if (key === name) return decodeURIComponent(val);
+  }
+  return null;
+}
+
+// --- Auth check on page load ---
+window.addEventListener("DOMContentLoaded", () => {
+  const uid = getCookie("uid");
+  if (!uid) {
+    alert("Session expired. Please log in again 👋");
+    window.location.href = "/login.html";
+  } else {
+    console.log("User logged in with UID:", uid);
+  }
+});
         // Particle Generation
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 20; i++) {

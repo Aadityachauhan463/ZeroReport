@@ -89,6 +89,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebas
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
+    // --- Helper: set cookie ---
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + d.toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)};${expires};path=/;SameSite=Lax`;
+}
+
+    
 // --- Firebase config ---
 const firebaseConfig = {
   apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
@@ -105,21 +114,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// --- Helper: set cookie ---
-function setCookie(name, value, days) {
-  const d = new Date();
-  d.setTime(d.getTime() + (days*24*60*60*1000));
-  document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`;
-}
-
 // --- Login function ---
 async function login(email, password) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-
-    // Save UID in cookie
-    setCookie("uid", user.uid, 7);
 
     // Update lastLogin in Firestore
     await updateDoc(doc(db, "users", user.uid), {
@@ -127,8 +126,12 @@ async function login(email, password) {
     });
 
     alert("Login successful! Welcome back, " + (user.displayName || "bro"));
-    // Redirect or open main app
-    // window.location.href = "/app.html";
+
+    // Save UID in cookie
+    setCookie("uid", user.uid, 7); // Will work for 7 days
+    
+    // open main app
+    window.location.href = "/mainApp.html";
 
   } catch (error) {
     console.error("Login error:", error.message);

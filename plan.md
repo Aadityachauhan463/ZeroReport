@@ -8,13 +8,14 @@
 
 **Objective:** Get users logging in and landing inside the app.
 
-- [ ] 🔒 Implement cookies logic on each page  
-- [ ] ↪️ Redirect user to `main_app.html` after login/signup  
-- [ ] 🔐 Secure the main app so only recognized users can access it
-  - [ ] Secure cookies with `HttpOnly` and `Secure` flags
+- [x] 🔒 Implement cookies logic on each page  
+- [x] ↪️ Redirect user to `main_app.html` after login/signup  
+- [x] 🔐 Secure the main app so only recognized users can access it
+
 
 🕒 **Estimated time:** 8–12 hrs  
 ✅ **Deliverable:** Working login flow with basic session security.
+🗿 **Reality** bro i got it done in under 2 hours while having tea and stuff
 
 ---
 
@@ -23,7 +24,7 @@
 **Objective:** Make the main app functional and meaningful.
 
 - [ ] 📝 Add artifacts feature (from Claude) when a report is generated
-- [ ] 🐛 fix the permalink feature (connecetd to artifacts) 
+- [ ] 🐛 fix the permalink feature (conneceted to artifacts) 
 - [ ] 💰 Implement economy system (as discussed with Grok)
 
 
@@ -40,7 +41,7 @@
 - [ ] 🎨 Ensure consistent branding across all pages  
 - [ ] 💡 Add help icon and creative placeholders  
   - “Try *Harry Potter*, *Cyberpunk*, *Stranger Things*, *The Matrix*, *Star Wars*, *LEGO*, *Pokémon*, *Rick and Morty*…”  
-- [ ] 🐛 Fix cookie persistence and artifacts trigger bugs
+- [x] 🐛 Fix cookie persistence and artifacts trigger bugs
 - [ ] 🤮 Remove the limitation in the design settings.
 
 🕒 **Estimated time:** 6–8 hrs  

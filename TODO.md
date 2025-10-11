@@ -22,7 +22,7 @@
 ### UX & Design
 - [ ] 🖼️ Design the history page layout
 - [ ] 🎨 Ensure consistent branding across the app
-- [ ] 
+- [ ] add help icon above the design style to guide to user to be more creative and standout.
 
 ### Marketing & Monetization
 - [ ] 📢 Start marketing
@@ -36,5 +36,7 @@
 - [ ] Cookies not persisting across pages
 - [ ] Artifacts feature not triggering when report generated
 - [ ] Economy system counters not updating correctly
+- [ ] Remove the limitations in the 7th step (design style)
+- [ ] guide the user to magic with placeholders like : "Try Harry potter or cyberpunk or stranger things, the matrix, star wars, lego, pokemon, or rick and morty, whatever"
 
 ---

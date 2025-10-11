@@ -589,25 +589,24 @@
     </div>
     
     <script>
-        // --- Helper to read cookie ---
-function getCookie(name) {
-  const cookies = document.cookie.split(';');
-  for (let cookie of cookies) {
-    const [key, val] = cookie.trim().split('=');
-    if (key === name) return decodeURIComponent(val);
-  }
-  return null;
-}
 
-// --- Redirect if no UID cookie ---
-const uid = getCookie("uid");
-if (!uid) {
-  // No cookie found → send back to landing page
-  window.location.href = "/index.html"; // change this if your landing page is named differently
-} else {
-  console.log("UID cookie found:", uid);
-  // User can continue to use the app
-}
+        // Immediately check for UID cookie
+(function() {
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [key, val] = cookie.trim().split('=');
+      if (key === name) return decodeURIComponent(val);
+    }
+    return null;
+  }
+
+  const uid = getCookie("uid");
+  if (!uid) {
+    // No UID → redirect instantly
+    window.location.replace("/index.html");
+  }
+})();
         // Particle Generation
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 20; i++) {

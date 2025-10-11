@@ -3,8 +3,6 @@
 ## 🚀 Features
 
 ### Login & Authentication
-- [ ] ⚡ Add personality-based login page
-- [ ] 🎨 Modify the login page to match the brand’s theme
 - [ ] 🔒 Implement cookies logic on each page
 - [ ] ↪️ Redirect user to `main_app.html` after login/signup
 - [ ] add multiple api keys to handle traffic.

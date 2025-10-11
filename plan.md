@@ -8,12 +8,9 @@
 
 **Objective:** Get users logging in and landing inside the app.
 
-- [ ] ⚡ Add personality-based login page  
-- [ ] 🎨 Modify login page to match brand’s theme  
 - [ ] 🔒 Implement cookies logic on each page  
 - [ ] ↪️ Redirect user to `main_app.html` after login/signup  
 - [ ] 🔐 Secure the main app so only recognized users can access it
-  - [ ] Add input validation
   - [ ] Secure cookies with `HttpOnly` and `Secure` flags
 
 🕒 **Estimated time:** 8–12 hrs  

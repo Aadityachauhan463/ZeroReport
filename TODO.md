@@ -10,7 +10,7 @@
 
 ### Main App Improvements
 - [x] 🔒 Make the main app more secure so only recognised users can only access it.
-- [ ] 📝 Add artifacts feature (from Claude) when report is generated
+- [x] 📝 Add artifacts feature (from Claude) when report is generated
 - [ ] 💰 Implement economy system discussed with Grok
 - [ ] 📜 Follow the user obsession “cheatsheet” designed by ChatGPT
 
@@ -29,7 +29,7 @@
 
 ## 🐛 Bugs
 - [x] Cookies not persisting across pages
-- [ ] Artifacts feature not triggering when report generated
+- [x] Artifacts feature not triggering when report generated
 - [ ] Economy system counters not updating correctly
 - [ ] Remove the limitations in the 7th step (design style)
 - [ ] guide the user to magic with placeholders like : "Try Harry potter or cyberpunk or stranger things, the matrix, star wars, lego, pokemon, or rick and morty, whatever"

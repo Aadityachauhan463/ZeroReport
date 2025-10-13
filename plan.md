@@ -23,9 +23,12 @@
 
 **Objective:** Make the main app functional and meaningful.
 
-- [ ] 📝 Add artifacts feature (from Claude) when a report is generated
-- [ ] 🐛 fix the permalink feature (conneceted to artifacts) 
+- [x] 📝 Add artifacts feature (from Claude) when a report is generated
+- [x] 🐛 fix the permalink feature (conneceted to artifacts) 
 - [ ] 💰 Implement economy system (as discussed with Grok)
+- [ ] make the load_page.html
+- [ ] complete the backend logic of load_page.html
+- [ ] make sure backend returns permalink as website.com/load_report/rid?=13836share?=false
 
 
 🕒 **Estimated time:** 8–10 hrs  
@@ -38,7 +41,7 @@
 **Objective:** Make it feel complete and visually cohesive.
 
 - [ ] 🖼️ Design history page layout  
-- [ ] 🎨 Ensure consistent branding across all pages  
+- [x] 🎨 Ensure consistent branding across all pages  
 - [ ] 💡 Add help icon and creative placeholders  
   - “Try *Harry Potter*, *Cyberpunk*, *Stranger Things*, *The Matrix*, *Star Wars*, *LEGO*, *Pokémon*, *Rick and Morty*…”  
 - [x] 🐛 Fix cookie persistence and artifacts trigger bugs

@@ -577,18 +577,12 @@
             <h2 class="step-title">3. Behold the creation.</h2>
             <div class="report-content" id="report-content">
                  <div class="report-placeholder" id="report-placeholder">Your report will materialize here.</div>
-                 <div id="report-text-container" style="display: none;">
-                    <!-- DUMMY CONTENT FOR DEMO -->
-                    <h2>Quarterly Sales Performance Analysis</h2>
-                    <p>This report provides a comprehensive analysis of the sales performance for the previous quarter, highlighting key trends, top-performing regions, and strategic recommendations for the upcoming period. The data suggests a strong upward trajectory in the North American market, while the European sector shows signs of stabilization after a period of volatility.</p>
-                    <h3>Key Insights & Observations</h3>
-                    <p>The most significant growth was observed in the "Enterprise Solutions" category, which saw a 22% increase in revenue compared to the prior quarter. This success can be attributed to the recent product update and a targeted marketing campaign that resonated well with our key demographic.</p>
-                 </div>
             </div>
         </div>
     </div>
     
     <script>
+    const link = document.createElement('a');
 
         // Immediately check for UID cookie
 (function() {
@@ -604,7 +598,10 @@
   const uid = getCookie("uid");
   if (!uid) {
     // No UID → redirect instantly
+    // add a js alert here, when the user is not logged in, ask them to.
+    alert("Please login, if this happening repeatedly, plesse contact support";
     window.location.replace("/index.html");
+    
   }
 })();
         // Particle Generation
@@ -704,16 +701,55 @@
     })
   });
 
-  // since it returns HTML, we read it as text not JSON
-  const html = await res.text();
+  document.getElementById("report-placeholder").innerText = "Our Magicians are working on it, please wait a few min";
+  const data = await res.json(); // ✅ parse JSON
   // figure out what to do with the HTML
   if (res.ok) {
-    // inject into the page or handle however you want
-    // document.body.innerHTML = html; 
-    // OR if you only want to show inside a div:
-    // resultBox.innerHTML = html;
-  } else {
-    console.error("❌ Server Error (HTML response):", html);
+  console.log("✅ Report Generated:", data.permalink, data.reportid);
+
+  const link = document.createElement("a");
+  link.href = data.permalink;
+  link.textContent = "Click Here";
+  link.target = "_blank";
+  link.style.color = "lime";
+
+  const placeholder = document.getElementById("report-placeholder");
+  placeholder.innerText = "Magic spells have been cast: ";
+  placeholder.appendChild(link);
+
+  // ----- Custom Alert -----
+  const alertBox = document.createElement("div");
+  alertBox.textContent = "✨ Your report is ready! Click the link below ✨";
+  alertBox.style.position = "fixed";
+  alertBox.style.top = "20px";
+  alertBox.style.left = "50%";
+  alertBox.style.transform = "translateX(-50%)";
+  alertBox.style.backgroundColor = "#0f0";
+  alertBox.style.color = "#000";
+  alertBox.style.padding = "12px 20px";
+  alertBox.style.borderRadius = "8px";
+  alertBox.style.fontWeight = "bold";
+  alertBox.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+  alertBox.style.zIndex = "9999";
+  alertBox.style.opacity = "0";
+  alertBox.style.transition = "opacity 0.5s ease";
+
+  document.body.appendChild(alertBox);
+
+  // fade in
+  requestAnimationFrame(() => {
+    alertBox.style.opacity = "1";
+  });
+
+  // fade out after 3 seconds
+  setTimeout(() => {
+    alertBox.style.opacity = "0";
+    setTimeout(() => {
+      document.body.removeChild(alertBox);
+    }, 500); // wait for fade-out
+  }, 3000);
+} else {
+    console.error("❌ Server Error: ", data);
   }
 
 } catch (err) {

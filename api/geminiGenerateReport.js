@@ -128,7 +128,7 @@ function makeId() {
 }
 
 function makePermalink(uid, reportId) {
-  return `${location.origin}/report.html?uid=${encodeURIComponent(uid)}&rid=${encodeURIComponent(reportId)}`;
+  return `zero-report.vercel.app/report.html?rid=${encodeURIComponent(reportId)}`;
 }
 
 // ---------- Generate & Save (subcollection) ----------

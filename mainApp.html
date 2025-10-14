@@ -684,6 +684,7 @@
     }
 
     // Report Generation Logic
+        const uid = getCookie("uid")
     generateBtn.addEventListener('click', async () => {
         if (!main_data) {
             alert('Upload and load your CSV first!');

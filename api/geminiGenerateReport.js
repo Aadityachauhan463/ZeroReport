@@ -98,6 +98,38 @@ Output only the final report content in responsive in single index.html, with cs
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize the client (pulls API key from environment variable GEMINI_API_KEY)
+
+import jwt from "jsonwebtoken"; // make sure to `npm install jsonwebtoken`
+import fetch from "node-fetch";
+
+// Verify Firebase ID Token using Google public keys (no Admin SDK)
+async function verifyFirebaseToken(idToken) {
+  try {
+    // Get Google public keys
+    const keysResponse = await fetch("https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com");
+    const publicKeys = await keysResponse.json();
+
+    // Decode header to find the correct key ID
+    const decodedHeader = jwt.decode(idToken, { complete: true });
+    if (!decodedHeader || !decodedHeader.header.kid) throw new Error("Invalid token header");
+
+    const key = publicKeys[decodedHeader.header.kid];
+    if (!key) throw new Error("Public key not found");
+
+    // Verify signature and claims
+    const decoded = jwt.verify(idToken, key, {
+      algorithms: ["RS256"],
+      audience: "sigma-app-e9397", // your Firebase project ID
+      issuer: "https://securetoken.google.com/sigma-app-e9397",
+    });
+
+    return decoded.uid; // return UID if valid
+  } catch (err) {
+    console.error("Token verification failed:", err.message);
+    return null;
+  }
+}
+
 const genAI = new GoogleGenerativeAI(api_key);
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
@@ -191,6 +223,12 @@ export default async function handler(req, res) {
 !user_company || !design_style ||
 !main_data || !uid) {
     return res.status(400).json({ error: "Missing fields" }); }
+
+  // ✅ verify token before doing anything
+  const verifiedUid = await verifyFirebaseToken(idToken);
+  if (!verifiedUid || verifiedUid !== uid) {
+    return res.status(401).json({ error: "Unauthorized: Invalid user token" });
+  }
 
   try{
     const prompt = generateReportPrompt(

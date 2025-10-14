@@ -582,185 +582,192 @@
     </div>
     
     <script>
-    const link = document.createElement('a');
+    const link = document.createElement('a'); // Unused globally, but harmless—left it.
 
-        // Immediately check for UID cookie
-(function() {
-  function getCookie(name) {
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-      const [key, val] = cookie.trim().split('=');
-      if (key === name) return decodeURIComponent(val);
-    }
-    return null;
-  }
-
-  const uid = getCookie("uid");
-  if (!uid) {
-    // No UID → redirect instantly
-    // add a js alert here, when the user is not logged in, ask them to.
-    alert("Please login, if this happening repeatedly, plesse contact support";
-    window.location.replace("/index.html");
-    
-  }
-})();
-        // Particle Generation
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-            particlesContainer.appendChild(particle);
+    // Immediately check for UID cookie
+    (function() {
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [key, val] = cookie.trim().split('=');
+                if (key === name) return decodeURIComponent(val);
+            }
+            return null;
         }
 
-        // UI Element References
-        const uploadZone = document.getElementById('upload-zone');
-        const fileInput = document.getElementById('file-input');
-        const fileInfo = document.getElementById('file-info');
-        const fileNameEl = document.getElementById('file-name');
-        const generateBtn = document.getElementById('generate-btn');
-        const spinner = document.getElementById('spinner');
-        const reportPlaceholder = document.getElementById('report-placeholder');
-        const reportTextContainer = document.getElementById('report-text-container');
-        
-        // File Upload Logic
-        uploadZone.addEventListener('click', () => fileInput.click());
+        const uid = getCookie("uid");
+        if (!uid) {
+            alert("Please login, if this is happening repeatedly, please contact support");
+            window.location.replace("/index.html");
+        }
+    })();
 
-        uploadZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadZone.classList.add('dragover');
+    // Particle Generation
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        particlesContainer.appendChild(particle);
+    }
+
+    // UI Element References
+    const uploadZone = document.getElementById('upload-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileInfo = document.getElementById('file-info');
+    const fileNameEl = document.getElementById('file-name');
+    const generateBtn = document.getElementById('generate-btn');
+    const spinner = document.getElementById('spinner');
+    const reportPlaceholder = document.getElementById('report-placeholder');
+    // Removed unused: reportTextContainer
+
+    // Global for CSV data
+    let main_data = null;
+
+    // File Upload Logic
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+        uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    });
+
+    // Merged handler: UI + read CSV
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    async function handleFile(file) {
+        if (!file.name.endsWith('.csv')) {
+            alert('Please upload a CSV file only.');
+            return;
+        }
+        fileNameEl.textContent = file.name;
+        fileInfo.classList.add('show');
+        generateBtn.disabled = false;
+
+        try {
+            main_data = await readCsvAsString(file);
+            console.log('CSV loaded:', main_data.substring(0, 100) + '...'); // Debug snippet
+        } catch (err) {
+            console.error('File read error:', err);
+            alert('Failed to read file. Try again.');
+            generateBtn.disabled = true;
+        }
+    }
+
+    function readCsvAsString(file) {
+        if (!file) throw new Error("No file provided");
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.onerror = e => reject(e.target.error);
+            reader.readAsText(file);
         });
+    }
 
-        uploadZone.addEventListener('dragleave', () => {
-            uploadZone.classList.remove('dragover');
-        });
+    // Report Generation Logic
+    generateBtn.addEventListener('click', async () => {
+        if (!main_data) {
+            alert('Upload and load your CSV first!');
+            return;
+        }
 
-        uploadZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadZone.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                fileInput.files = files;
-                handleFileSelection(files[0]);
+        const report_purpose = document.getElementById('q-purpose').value;
+        const report_audience_or_tone = document.getElementById('q-audience').value;
+        const report_key_focus = document.getElementById('q-focus').value;
+        const report_length_or_format = document.getElementById('q-format').value;
+        const report_extra_notes = document.getElementById('q-notes').value;
+        const user_company = document.getElementById('q-company').value;
+        const design_style = document.getElementById('q-design').value;
+
+        // Show spinner, disable button
+        spinner.classList.add('show');
+        generateBtn.disabled = true;
+        reportPlaceholder.innerText = 'Our Magicians are working on it, please wait a few min...';
+
+        try {
+            const res = await fetch("/api/geminiGenerateReport", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    report_purpose,
+                    report_audience_or_tone,
+                    report_key_focus,
+                    report_length_or_format,
+                    report_extra_notes,
+                    user_company,
+                    design_style,
+                    main_data
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                console.log("✅ Report Generated:", data.permalink, data.reportid);
+
+                const linkEl = document.createElement("a");
+                linkEl.href = data.permalink;
+                linkEl.textContent = "Click Here";
+                linkEl.target = "_blank";
+                linkEl.style.color = "lime";
+
+                reportPlaceholder.innerHTML = 'Magic spells have been cast: ';
+                reportPlaceholder.appendChild(linkEl);
+
+                // Custom Alert
+                const alertBox = document.createElement("div");
+                alertBox.textContent = "✨ Your report is ready! Click the link below ✨";
+                alertBox.style.position = "fixed";
+                alertBox.style.top = "20px";
+                alertBox.style.left = "50%";
+                alertBox.style.transform = "translateX(-50%)";
+                alertBox.style.backgroundColor = "#0f0";
+                alertBox.style.color = "#000";
+                alertBox.style.padding = "12px 20px";
+                alertBox.style.borderRadius = "8px";
+                alertBox.style.fontWeight = "bold";
+                alertBox.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+                alertBox.style.zIndex = "9999";
+                alertBox.style.opacity = "0";
+                alertBox.style.transition = "opacity 0.5s ease";
+
+                document.body.appendChild(alertBox);
+                requestAnimationFrame(() => alertBox.style.opacity = "1");
+                setTimeout(() => {
+                    alertBox.style.opacity = "0";
+                    setTimeout(() => document.body.removeChild(alertBox), 500);
+                }, 3000);
+            } else {
+                throw new Error(data.error || 'Server error');
             }
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFileSelection(e.target.files[0]);
-            }
-        });
-
-        function handleFileSelection(file) {
-            fileNameEl.textContent = file.name;
-            fileInfo.classList.add('show');
+        } catch (err) {
+            console.error("Error:", err.message || err);
+            reportPlaceholder.innerText = 'Oops, something went wrong. Check console or try again.';
+            alert('Generation failed: ' + (err.message || 'Network issue'));
+        } finally {
+            spinner.classList.remove('show');
             generateBtn.disabled = false;
         }
-
-        async function readCsvAsString(file) {
-  if (!file) throw new Error("No file provided");
-
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = e => resolve(e.target.result);
-    reader.onerror = e => reject(e.target.error);
-    reader.readAsText(file);
-  });
-        }
-        // Csv processing logic
-        document.getElementById("file-input").addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  const main_data = await readCsvAsString(file);
-})
-        // Report Generation Logic
-        
-         document.getElementById('generate-btn').addEventListener('click', async() => {
-             const report_purpose = document.getElementById('q-purpose').value;
-             const report_audience_or_tone = document.getElementById('q-audience').value;
-             const report_key_focus = document.getElementById('q-focus').value;
-             const report_length_or_format = document.getElementById('q-format').value;
-             const report_extra_notes = document.getElementById('q-notes').value;
-             const user_company = document.getElementById('q-company').value;
-             const design_style = document.getElementById('q-design').value;
-             
-            try {
-  const res = await fetch("/api/geminiGenerateReport", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      report_purpose,
-      report_audience_or_tone,
-      report_key_focus,
-      report_length_or_format,
-      report_extra_notes,
-      user_company,
-      design_style,
-      main_data
-    })
-  });
-
-  document.getElementById("report-placeholder").innerText = "Our Magicians are working on it, please wait a few min";
-  const data = await res.json(); // ✅ parse JSON
-  // figure out what to do with the HTML
-  if (res.ok) {
-  console.log("✅ Report Generated:", data.permalink, data.reportid);
-
-  const link = document.createElement("a");
-  link.href = data.permalink;
-  link.textContent = "Click Here";
-  link.target = "_blank";
-  link.style.color = "lime";
-
-  const placeholder = document.getElementById("report-placeholder");
-  placeholder.innerText = "Magic spells have been cast: ";
-  placeholder.appendChild(link);
-
-  // ----- Custom Alert -----
-  const alertBox = document.createElement("div");
-  alertBox.textContent = "✨ Your report is ready! Click the link below ✨";
-  alertBox.style.position = "fixed";
-  alertBox.style.top = "20px";
-  alertBox.style.left = "50%";
-  alertBox.style.transform = "translateX(-50%)";
-  alertBox.style.backgroundColor = "#0f0";
-  alertBox.style.color = "#000";
-  alertBox.style.padding = "12px 20px";
-  alertBox.style.borderRadius = "8px";
-  alertBox.style.fontWeight = "bold";
-  alertBox.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
-  alertBox.style.zIndex = "9999";
-  alertBox.style.opacity = "0";
-  alertBox.style.transition = "opacity 0.5s ease";
-
-  document.body.appendChild(alertBox);
-
-  // fade in
-  requestAnimationFrame(() => {
-    alertBox.style.opacity = "1";
-  });
-
-  // fade out after 3 seconds
-  setTimeout(() => {
-    alertBox.style.opacity = "0";
-    setTimeout(() => {
-      document.body.removeChild(alertBox);
-    }, 500); // wait for fade-out
-  }, 3000);
-} else {
-    console.error("❌ Server Error: ", data);
-  }
-
-} catch (err) {
-  console.error("💀 Network Error:", err.message || err);
-            }
-             
-             
-         })
-            
-            ;
-
-    </script>
+    });
+                    </script>
 </body>
 </html>

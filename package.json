@@ -1,17 +1,17 @@
 {
-  "name": "sigma-reports",
+  "name": "zero-report",
   "version": "1.0.0",
-  "description": "Serverless function for generating AI reports",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
-  },
-  "engines": {
-    "node": "22.x"
+    "start": "node api/index.js"
   },
   "dependencies": {
-    "@ai-sdk/google": "^1.0.0",
-    "firebase": "^11.0.1",
+    "express": "^4.18.2",
+    "firebase": "^10.13.0",
+    "node-fetch": "^3.3.2",
     "jsonwebtoken": "^9.0.0"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }

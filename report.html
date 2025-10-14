@@ -25,6 +25,10 @@
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
       word-break: break-word;
+      min-height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .spinner {
       border: 4px solid rgba(255,255,255,0.2);
@@ -33,7 +37,6 @@
       width: 40px;
       height: 40px;
       animation: spin 1s linear infinite;
-      margin: 40px auto;
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
@@ -43,9 +46,6 @@
       #report-placeholder { padding: 15px; }
     }
   </style>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <h1>ZeroReport Viewer</h1>
@@ -53,50 +53,31 @@
     <div class="spinner"></div>
   </div>
 
-<script>
-  // 1️⃣ Initialize Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
-    authDomain: "sigma-app-e9397.firebaseapp.com",
-    projectId: "sigma-app-e9397",
-    storageBucket: "sigma-app-e9397.firebasestorage.app",
-    messagingSenderId: "561606435145",
-    appId: "1:561606435145:web:c68e3629ce50215f177a98",
-    measurementId: "G-1KG5C55LEB"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  <script>
+    const placeholder = document.getElementById("report-placeholder");
+    const params = new URLSearchParams(window.location.search);
+    const rid = params.get("rid");
 
-  // 2️⃣ Get reportId from URL
-  const params = new URLSearchParams(window.location.search);
-  const rid = params.get("rid");
-  const placeholder = document.getElementById("report-placeholder");
+    if (!rid) {
+      placeholder.innerHTML = "<p style='text-align:center;'>Invalid report link!</p>";
+    } else {
+      (async () => {
+        try {
+          const resp = await fetch(`/api/getReport?rid=${encodeURIComponent(rid)}`);
+          const data = await resp.json();
 
-  if (!rid) {
-    placeholder.innerHTML = "<p style='text-align:center;'>Invalid report link!</p>";
-  } else {
-    (async () => {
-      try {
-        // 3️⃣ Query subcollections
-        const snapshot = await db.collectionGroup("reports")
-                                 .where("reportId", "==", rid)
-                                 .limit(1)
-                                 .get();
+          if (!resp.ok || !data.html) {
+            throw new Error(data.error || "Report not found");
+          }
 
-        if (snapshot.empty) {
-          placeholder.innerHTML = "<p style='text-align:center;'>Report not found!</p>";
-          return;
+          // Replace placeholder with report HTML
+          placeholder.innerHTML = data.html;
+        } catch (err) {
+          console.error("Error loading report:", err);
+          placeholder.innerHTML = "<p style='text-align:center;'>Error loading report.</p>";
         }
-
-        const report = snapshot.docs[0].data();
-        // Sanitize / escape HTML just in case (optional)
-        placeholder.innerHTML = report.html || "<p>No content in this report.</p>";
-      } catch (err) {
-        console.error("Error loading report:", err);
-        placeholder.innerHTML = "<p style='text-align:center;'>Error loading report.</p>";
-      }
-    })();
-  }
-</script>
+      })();
+    }
+  </script>
 </body>
 </html>

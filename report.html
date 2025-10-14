@@ -3,258 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report Viewer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1em;
-            opacity: 0.9;
-        }
-
-        .content {
-            padding: 40px;
-            min-height: 400px;
-        }
-
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 300px;
-            font-size: 1.2em;
-            color: #666;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-right: 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error {
-            background: #fee;
-            border-left: 4px solid #f44;
-            color: #c33;
-            padding: 20px;
-            border-radius: 4px;
-            margin: 20px 0;
-        }
-
-        .error-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        #report-content {
-            line-height: 1.6;
-            color: #333;
-        }
-
-        #report-content h1,
-        #report-content h2,
-        #report-content h3,
-        #report-content h4,
-        #report-content h5,
-        #report-content h6 {
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            color: #2c3e50;
-        }
-
-        #report-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1em 0;
-        }
-
-        #report-content th,
-        #report-content td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        #report-content th {
-            background: #f8f9fa;
-            font-weight: 600;
-        }
-
-        #report-content ul,
-        #report-content ol {
-            margin-left: 2em;
-            margin-bottom: 1em;
-        }
-
-        #report-content li {
-            margin-bottom: 0.5em;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                padding: 30px 20px;
-            }
-
-            .header h1 {
-                font-size: 1.5em;
-            }
-
-            .content {
-                padding: 20px;
-            }
-
-            #report-content table {
-                font-size: 0.9em;
-            }
-
-            #report-content th,
-            #report-content td {
-                padding: 8px;
-            }
-        }
-
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-
-            .container {
-                box-shadow: none;
-                border-radius: 0;
-                max-width: 100%;
-            }
-
-            .header {
-                page-break-after: avoid;
-            }
-
-            .content {
-                padding: 0;
-            }
-
-            #report-content {
-                page-break-inside: avoid;
-            }
-
-            #report-content h2,
-            #report-content h3 {
-                page-break-after: avoid;
-            }
-        }
-    </style>
+    <title>Report</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Report Viewer</h1>
-            <p>Loading your report...</p>
-        </div>
-        <div class="content">
-            <div id="report-content" class="loading">
-                <div class="spinner"></div>
-                <span>Fetching report...</span>
-            </div>
-        </div>
-    </div>
+    <div id="report-container"></div>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
+            authDomain: "sigma-app-e9397.firebaseapp.com",
+            projectId: "sigma-app-e9397",
+            storageBucket: "sigma-app-e9397.firebasestorage.app",
+            messagingSenderId: "561606435145",
+            appId: "1:561606435145:web:c68e3629ce50215f177a98",
+            measurementId: "G-1KG5C55LEB"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         async function loadReport() {
             try {
-                // Get the rid parameter from URL
                 const params = new URLSearchParams(window.location.search);
                 const rid = params.get('rid');
 
                 if (!rid) {
-                    showError('No report ID provided. Use ?rid=<reportId> in the URL.');
+                    document.getElementById('report-container').innerHTML = '<p>No report ID provided</p>';
                     return;
                 }
 
-                // Fetch the report HTML from the API
-                const response = await fetch(`/api/getReport?rid=${encodeURIComponent(rid)}`);
+                const snapshot = await db.collectionGroup('reports')
+                    .where('reportId', '==', rid)
+                    .limit(1)
+                    .get();
 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        showError('Report not found. Please check the report ID.');
-                    } else {
-                        showError(`Server error: ${response.status}`);
-                    }
+                if (snapshot.empty) {
+                    document.getElementById('report-container').innerHTML = '<p>Report not found</p>';
                     return;
                 }
 
-                const data = await response.json();
-
-                if (!data.html) {
-                    showError('Report HTML is empty.');
-                    return;
-                }
-
-                // Inject the HTML directly into the page
-                const contentDiv = document.getElementById('report-content');
-                contentDiv.innerHTML = data.html;
-
-                // Update header
-                document.querySelector('.header p').textContent = `Report ID: ${rid}`;
+                const report = snapshot.docs[0].data();
+                document.getElementById('report-container').innerHTML = report.html;
 
             } catch (err) {
-                console.error('Error loading report:', err);
-                showError(`Failed to load report: ${err.message}`);
+                console.error('Error:', err);
+                document.getElementById('report-container').innerHTML = `<p>Error: ${err.message}</p>`;
             }
         }
 
-        function showError(message) {
-            const contentDiv = document.getElementById('report-content');
-            contentDiv.innerHTML = `
-                <div class="error">
-                    <div class="error-title">Error Loading Report</div>
-                    <div>${message}</div>
-                </div>
-            `;
-            contentDiv.classList.remove('loading');
-        }
-
-        // Load the report when the page loads
-        document.addEventListener('DOMContentLoaded', loadReport);
+        loadReport();
     </script>
 </body>
 </html>

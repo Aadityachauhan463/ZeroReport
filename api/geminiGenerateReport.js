@@ -94,8 +94,12 @@ Always end with "Made by [user_company]" if provided.
 Output only the final report content in responsive in single index.html, with css and js embedded, no explanations or extra commentary.
 `;
 };
+import { google } from '@ai-sdk/google';
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
+// Initialize Google Generative AI client
+const genAI = google({
+  apiKey: api_key});
+// import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize the client (pulls API key from environment variable GEMINI_API_KEY)
 
@@ -130,13 +134,15 @@ async function verifyFirebaseToken(idToken) {
   }
 }
 
-const genAI = new GoogleGenerativeAI(api_key);
+// const genAI = new GoogleGenerativeAI(api_key);
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { initializeApp } from "firebase/app";
+
 import {
   getFirestore, doc, getDoc, setDoc, updateDoc,
   arrayUnion, increment
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+} from "firebase/firestore";
+
 
 // ---------- CONFIG ----------
 const firebaseConfig = {

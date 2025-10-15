@@ -4,9 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        #report-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f5f5f5;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+        }
+    </style>
 </head>
 <body>
-    <div id="report-container"></div>
+    <div id="report-container">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading report...</p>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -30,26 +79,42 @@
             measurementId: "G-1KG5C55LEB"
         };
         
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         
+        // Extract full HTML from text
         function extractFullHTML(text) {
-            // Regex to match from <!DOCTYPE html> to </html>, including newlines
             const htmlRegex = /<!DOCTYPE html>[\s\S]*?<\/html>/i;
             const match = text.match(htmlRegex);
-            return match ? match[0] : "";
+            return match ? match[0] : text;
         }
         
+        // Show error message
+        function showError(message) {
+            document.getElementById('report-container').innerHTML = `
+                <div class="error">
+                    <h3>⚠️ Error</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        // Main function to load report
         async function loadReport() {
             try {
+                // Get report ID from URL
                 const params = new URLSearchParams(window.location.search);
                 const rid = params.get('rid');
 
                 if (!rid) {
-                    document.getElementById('report-container').innerHTML = '<p>No report ID provided</p>';
+                    showError('No report ID provided in URL');
                     return;
                 }
                 
+                console.log('📄 Loading report:', rid);
+                
+                // Query Firebase for the report
                 const reportsQuery = query(
                     collectionGroup(db, 'reports'),
                     where('reportId', '==', rid)
@@ -59,24 +124,70 @@
                 
                 if (querySnapshot.empty) {
                     console.log('❌ No report found with ID:', rid);
-                    document.getElementById('report-container').innerHTML = '<p>No report found with this ID</p>';
+                    showError(`No report found with ID: ${rid}`);
                     return;
                 }
                 
-                // Get the first document from the query
+                // Get the report data
                 const doc = querySnapshot.docs[0];
                 const data = doc.data();
-                const sanitized_html = extractFullHTML(data.html);
+                console.log('✅ Report found:', doc.id);
                 
-                // the final line to load the report into page.
-                document.getElementById('report-container').innerHTML = sanitized_html;
+                // Extract HTML content
+                const htmlContent = extractFullHTML(data.html);
+                
+                if (!htmlContent) {
+                    showError('Report content is empty');
+                    return;
+                }
+                
+                // Create full-page iframe
+                const iframe = document.createElement('iframe');
+                iframe.style.position = 'fixed';
+                iframe.style.top = '0';
+                iframe.style.left = '0';
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.style.margin = '0';
+                iframe.style.padding = '0';
+                iframe.style.overflow = 'auto';
+                iframe.style.zIndex = '999999';
+                iframe.style.background = 'white';
+                
+                // Add iframe to body
+                document.body.appendChild(iframe);
+                
+                // Hide the original container
+                document.getElementById('report-container').style.display = 'none';
+                
+                // Write HTML content to iframe
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(htmlContent);
+                iframeDoc.close();
+                
+                console.log('✅ Report loaded successfully');
+                
+                // Optional: Set page title from iframe
+                iframe.onload = function() {
+                    try {
+                        const iframeTitle = iframe.contentDocument.title;
+                        if (iframeTitle) {
+                            document.title = iframeTitle;
+                        }
+                    } catch (e) {
+                        // Ignore if we can't access iframe title
+                    }
+                };
 
             } catch (err) {
-                console.error('Error:', err);
-                document.getElementById('report-container').innerHTML = `<p>Error: ${err.message}</p>`;
+                console.error('❌ Error loading report:', err);
+                showError(`Failed to load report: ${err.message}`);
             }
         }
 
+        // Load report when page loads
         loadReport();
     </script>
 </body>

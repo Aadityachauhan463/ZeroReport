@@ -4,23 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report</title>
+</head>
+<body>
+    <div id="report-container"></div>
+
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
-        import { getFirestore, collectionGroup, query, where, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { 
+      getFirestore, 
+      collection, 
+      query, 
+      where, 
+      getDocs,
+      collectionGroup 
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
-            authDomain: "sigma-app-e9397.firebaseapp.com",
-            projectId: "sigma-app-e9397",
-            storageBucket: "sigma-app-e9397.firebasestorage.app",
-            messagingSenderId: "561606435145",
-            appId: "1:561606435145:web:c68e3629ce50215f177a98",
-            measurementId: "G-1KG5C55LEB"
-        };
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
+      authDomain: "sigma-app-e9397.firebaseapp.com",
+      projectId: "sigma-app-e9397",
+      storageBucket: "sigma-app-e9397.firebasestorage.app",
+      messagingSenderId: "561606435145",
+      appId: "1:561606435145:web:c68e3629ce50215f177a98",
+      measurementId: "G-1KG5C55LEB"
+    };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  
+  function extractFullHTML(text) {
+  // Regex to match from <!DOCTYPE html> to </html>, including newlines
+  const htmlRegex = /<!DOCTYPE html>[\s\S]*?<\/html>/i;
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+  const match = text.match(htmlRegex);
 
+  return match ? match[0] : "";
+}
+  
         async function loadReport() {
             try {
                 const params = new URLSearchParams(window.location.search);
@@ -30,22 +50,24 @@
                     document.getElementById('report-container').innerHTML = '<p>No report ID provided</p>';
                     return;
                 }
-
-                const q = query(
-                    collectionGroup(db, 'reports'),
-                    where('reportId', '==', rid),
-                    limit(1)
-                );
-
-                const snapshot = await getDocs(q);
-
-                if (snapshot.empty) {
-                    document.getElementById('report-container').innerHTML = '<p>Report not found</p>';
-                    return;
-                }
-
-                const report = snapshot.docs[0].data();
-                document.getElementById('report-container').innerHTML = report.html;
+              
+              const reportsQuery = query(
+          collectionGroup(db, 'reports'),
+          where('reportId', '==', rid)
+        );
+        
+        const querySnapshot = await getDocs(reportsQuery);
+        
+        if (querySnapshot.empty) {
+          console.log('❌ No report found with ID:', rid);
+          showStatus('No report found with this ID', 'error');
+          return;
+        }
+              const data = doc.data();
+              const sanitized_html = extractFullHTML(data.html)
+              
+              // the final line to load tge report into page.
+              document.getElementById('report-container').innerHTML = sanitized_html;
 
             } catch (err) {
                 console.error('Error:', err);
@@ -55,8 +77,5 @@
 
         loadReport();
     </script>
-</head>
-<body>
-    <div id="report-container"></div>
 </body>
 </html>

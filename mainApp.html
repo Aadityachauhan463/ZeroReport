@@ -704,7 +704,7 @@ generateBtn.addEventListener('click', async () => {
     reportPlaceholder.innerText = 'Our Magicians are working on it, please wait a few min...';
 
     try {
-        const res = await fetch("/api/geminiGenerateReport", {
+        const res = await fetch("/api/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

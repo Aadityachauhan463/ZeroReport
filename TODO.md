@@ -7,6 +7,9 @@
 - [x] ↪️ Redirect user to `main_app.html` after login/signup
 - [ ] add multiple api keys to handle traffic.
 - [ ] add a logic connected with db that decides which one of 4 api keys will be used for the current user.
+- [x] make the main rendering page work.
+- [x] add logic to the main_app.
+- [x] push it in prod.
 
 ### Main App Improvements
 - [x] 🔒 Make the main app more secure so only recognised users can only access it.

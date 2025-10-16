@@ -26,13 +26,15 @@
 - [x] 📝 Add artifacts feature (from Claude) when a report is generated
 - [x] 🐛 fix the permalink feature (conneceted to artifacts) 
 - [ ] 💰 Implement economy system (as discussed with Grok)
-- [ ] make the load_page.html
-- [ ] complete the backend logic of load_page.html
-- [ ] make sure backend returns permalink as website.com/load_report/rid?=13836share?=false
+- [x] make the load_page.html
+- [x] complete the backend logic of load_page.html
+- [x] make sure backend returns permalink as website.com/load_report/rid?=13836share?=false
+- [x] make it work.
 
 
 🕒 **Estimated time:** 8–10 hrs  
 ✅ **Deliverable:** Core app logic with rewards and engagement system.
+🗿 **REALITY :** it took me a about 20+ hours to make it work😭.
 
 ---
 

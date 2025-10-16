@@ -139,7 +139,7 @@ return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
 }
 
 function makePermalink(reportId) {
-  return `zero-report.vercel.app/report.html?rid=${encodeURIComponent(reportId)}`;
+  return `https://zero-report.vercel.app/report.html?rid=${encodeURIComponent(reportId)}`;
 }
 
 async function generateAndSave(prompt, uid) {

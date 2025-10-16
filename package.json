@@ -10,7 +10,7 @@
     "start": "node --loader @vercel/node api/generate.js"
   },
   "dependencies": {
-    "jsonwebtoken": "^9.1.2",
+    "jsonwebtoken": "^9.0.0",
     "node-fetch": "^2.7.0",
     "firebase": "^10.7.0"
   },

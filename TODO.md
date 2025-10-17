@@ -15,14 +15,15 @@
 - [x] 🔒 Make the main app more secure so only recognised users can only access it.
 - [x] 📝 Add artifacts feature (from Claude) when report is generated
 - [ ] 💰 Implement economy system discussed with Grok
+- [ ] update the landing page, make it similar like Klientboost's landing page.
 - [ ] 📜 Follow the user obsession “cheatsheet” designed by ChatGPT
 
 ### UX & Design
 - [x] 🖼️ Design the history page layout
 - [x] make the history page work
-- [ ] push it to prod.
+- [x] push it to prod.
 - [x] 🎨 Ensure consistent branding across the app
-- [ ] add help icon above the design style to guide to user to be more creative and standout.
+- [x] add help icon above the design style to guide to user to be more creative and standout.
 
 ### Marketing & Monetization
 - [ ] 📢 Start marketing
@@ -36,7 +37,8 @@
 - [x] Cookies not persisting across pages
 - [x] Artifacts feature not triggering when report generated
 - [ ] Economy system counters not updating correctly
-- [ ] Remove the limitations in the 7th step (design style)
-- [ ] guide the user to magic with placeholders like : "Try Harry potter or cyberpunk or stranger things, the matrix, star wars, lego, pokemon, or rick and morty, whatever"
+- [x] Remove the limitations in the 7th step (design style)
+- [x] guide the user to magic with placeholders like : "Try Harry potter or cyberpunk or stranger things, the matrix, star wars, lego, pokemon, or rick and morty, whatever"
+- [ ] make the "see it in action" button lead to something, currently, it just throws error.
 
 ---

@@ -470,7 +470,26 @@ body.nav-open .menu-icon .line3 { transform: translateY(-8px) rotate(-45deg); }
             font-family: 'Playfair Display', serif;
             font-size: 1.25rem;
         }
-        
+        /* ... inside your <style> tag ... */
+
+/* Sample Data Link Styling */
+.sample-data-container {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.sample-data-link {
+    color: #b8b9d4;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(184, 185, 212, 0.4);
+    transition: all 0.3s ease;
+}
+
+.sample-data-link:hover {
+    color: #e0d4ff;
+    border-bottom-color: #a78bfa;
+}
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -537,6 +556,12 @@ body.nav-open .menu-icon .line3 { transform: translateY(-8px) rotate(-45deg); }
                     </div>
                 </label>
             </div>
+            <div class="sample-data-container">
+    <span id="load-sample-data" class="sample-data-link">
+        Don't have a CSV? Try our sample data.
+    </span>
+</div>
+<!-- END: NEW CLEAN LINK SECTION -->
             <input type="file" id="file-input" class="file-input" accept=".csv">
 
             <div class="file-info" id="file-info">
@@ -622,9 +647,9 @@ function getCookie(name) {
 (function() {
     const uid = getCookie("uid");
     if (!uid) {
-        alert("Please login, if this is happening repeatedly, please contact support");
+        alert("Please login. if this is happening repeatedly, please contact support");
         window.location.replace("/index.html");
-        console.log("i am straight bro, no cap")
+        console.log("i am straight bro, no cap, you good tho ?")
     }
 })();
 
@@ -721,6 +746,40 @@ document.addEventListener('DOMContentLoaded', typeEffect);
 // Global for CSV data
 let main_data = null;
 
+// --- START: NEW EXAMPLE DATA LOGIC (V2) ---
+
+// 1. Store our primary example CSV data.
+const sampleCsvData = `Date,Region,Product,Sales
+2023-01-15,North,Widget A,15000
+2023-01-20,North,Widget B,9000
+2023-02-10,South,Widget A,12500
+2023-02-18,South,Widget C,21000
+2023-03-05,West,Widget B,18000
+2023-03-22,West,Widget C,24000
+2023-03-28,East,Widget A,16500`;
+
+// 2. Get a reference to our new link.
+const sampleDataLink = document.getElementById('load-sample-data');
+
+// 3. Listen for a click on just that link.
+sampleDataLink.addEventListener('click', () => {
+    const fileName = 'sample_sales_data.csv';
+
+    // 4. Create a fake "File" object from our string data.
+    const fakeFile = new File([sampleCsvData], fileName, { type: 'text/csv' });
+
+    // 5. Call the existing handleFile function.
+    handleFile(fakeFile);
+    
+    // 6. (Bonus UX) Scroll the user to the next step.
+    document.getElementById('step2').scrollIntoView({ behavior: 'smooth' });
+});
+
+// --- END: NEW EXAMPLE DATA LOGIC (V2) ---
+
+
+// File Upload Logic
+// ... (the rest of your script remains the same) ...
 // File Upload Logic
 //uploadZone.addEventListener('click', () => fileInput.click());
 

@@ -138,6 +138,11 @@ if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID
 return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
 }
 
+function extractTitle(str) {
+  const match = str.match(/<title>(.*?)<\/title>/i);
+  return match ? match[1] : null;
+}
+
 function makePermalink(reportId) {
   return `https://zero-report.vercel.app/report.html?rid=${encodeURIComponent(reportId)}`;
 }
@@ -163,10 +168,11 @@ const data = await res.json();
 const text = data.candidates?.[0]?.content?.parts?.[0]?.text ||  
              JSON.stringify(data, null, 2);  
 
+const extracted_title = extractTitle(text) || "Generated Report";
 const reportId = makeId();  
 const report = {  
   reportId,  
-  title: prompt.slice(0, 60) + (prompt.length > 60 ? "..." : ""),  
+  title: extracted_title,  
   html: text,  
   createdAt: new Date().toISOString(),  
   permalink: makePermalink(reportId)  

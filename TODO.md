@@ -18,7 +18,9 @@
 - [ ] 📜 Follow the user obsession “cheatsheet” designed by ChatGPT
 
 ### UX & Design
-- [ ] 🖼️ Design the history page layout
+- [x] 🖼️ Design the history page layout
+- [x] make the history page work
+- [ ] push it to prod.
 - [x] 🎨 Ensure consistent branding across the app
 - [ ] add help icon above the design style to guide to user to be more creative and standout.
 

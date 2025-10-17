@@ -11,6 +11,7 @@
 - [x] 🔒 Implement cookies logic on each page  
 - [x] ↪️ Redirect user to `main_app.html` after login/signup  
 - [x] 🔐 Secure the main app so only recognized users can access it
+- [ ] add a regex in main api call to extract the title from the <title> </title> tag.
 
 
 🕒 **Estimated time:** 8–12 hrs  
@@ -26,6 +27,8 @@
 - [x] 📝 Add artifacts feature (from Claude) when a report is generated
 - [x] 🐛 fix the permalink feature (conneceted to artifacts) 
 - [ ] 💰 Implement economy system (as discussed with Grok)
+- [ ] about 50 reports $20, $40 for 100 and 20 r as bonus and then contact us.
+- [ ] and keep $20 plan for free for the first 100 users.
 - [x] make the load_page.html
 - [x] complete the backend logic of load_page.html
 - [x] make sure backend returns permalink as website.com/load_report/rid?=13836share?=false
@@ -42,12 +45,15 @@
 
 **Objective:** Make it feel complete and visually cohesive.
 
-- [ ] 🖼️ Design history page layout  
+- [x] 🖼️ Design history page layout  
 - [x] 🎨 Ensure consistent branding across all pages  
-- [ ] 💡 Add help icon and creative placeholders  
-  - “Try *Harry Potter*, *Cyberpunk*, *Stranger Things*, *The Matrix*, *Star Wars*, *LEGO*, *Pokémon*, *Rick and Morty*…”  
+- [ ] 💡 Add help icon as a typewriter effect.
+  - “Try *Harry Potter*, *Cyberpunk*, *Stranger Things*, *The Matrix*, *Star Wars*, *LEGO*, *Pokémon*, *Rick and Morty*…”
+- [ ] add "don't have data ?", here's sample csv data.
 - [x] 🐛 Fix cookie persistence and artifacts trigger bugs
 - [ ] 🤮 Remove the limitation in the design settings.
+- [x] add navbar to the necessary apps + backend.
+- [ ] 👑 make the landing page copy better, tbh, just steal the format of klientboost's landing page, that shi is goated.
 
 🕒 **Estimated time:** 6–8 hrs  
 ✅ **Deliverable:** Smooth, branded experience ready for user feedback.

@@ -20,6 +20,25 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
+    
+    /* Layout & Main Container */
+.page-wrapper { position: relative; z-index: 2; }
+
+/* Side Navigation */
+.side-nav { position: fixed; top: 0; left: 0; width: var(--nav-width); height: 100vh; background: rgba(10, 14, 31, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 1px solid rgba(255, 255, 255, 0.08); z-index: 1001; transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 2rem; display: flex; flex-direction: column; }
+.side-nav .nav-links { list-style: none; margin-top: 4rem; }
+.side-nav .nav-links a { display: block; color: #b8b9d4; text-decoration: none; font-size: 1.125rem; font-weight: 500; padding: 1rem 1.5rem; border-radius: 12px; transition: all 0.3s ease; }
+.side-nav .nav-links a:hover { color: #fff; background: rgba(139, 92, 246, 0.1); }
+.side-nav .nav-links .active a { color: #fff; background: rgba(139, 92, 246, 0.2); }
+.nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+body.nav-open .side-nav { transform: translateX(0); }
+body.nav-open .nav-overlay { opacity: 1; pointer-events: auto; }
+.top-navbar { position: sticky; top: 0; padding: 1rem 0; z-index: 10; } /* We will adapt this */
+.menu-icon { cursor: pointer; padding: 0.5rem; z-index: 1002; position: relative; }
+.menu-icon .line { width: 26px; height: 2px; background-color: #c4b5fd; display: block; margin: 6px 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+body.nav-open .menu-icon .line1 { transform: translateY(8px) rotate(45deg); }
+body.nav-open .menu-icon .line2 { opacity: 0; }
+body.nav-open .menu-icon .line3 { transform: translateY(-8px) rotate(-45deg); }
 
         /* ZeroReport Background System */
         .bg-canvas {
@@ -475,6 +494,14 @@
     </style>
 </head>
 <body>
+    <nav class="side-nav" id="side-nav">
+    <ul class="nav-links">
+        <li class="active"><a href="/mainApp.html">✨ New Report</a></li>
+        <li><a href="/history.html">📜 History</a></li>
+        <li><a href="#" onclick="logout(); return false;">🚪 Logout</a></li>
+    </ul>
+</nav>
+<div class="nav-overlay" id="nav-overlay"></div>
 
     <div class="bg-canvas">
         <div class="gradient-mesh"></div>
@@ -483,6 +510,10 @@
     </div>
 
     <div class="container">
+        <div class="menu-icon" id="menu-btn">
+             <span class="line line1"></span><span class="line line2"></span><span class="line line3"></span>
+        </div>
+        
         <header class="header">
             <h1 class="display-2 header-title">Create your story.</h1>
             <p class="tagline">From raw numbers to living insight, in three simple steps.</p>
@@ -537,7 +568,7 @@
                     <input type="text" id="q-focus" class="qna-input" placeholder="e.g., 'Revenue growth, customer acquisition cost, regional performance'">
                 </div>
                  <div class="qna-item">
-                    <label for="q-format" class="qna-label">4. Length / Format</label>
+               <label for="q-format" class="qna-label">4. Length / Format</label>
                     <select id="q-format" class="qna-select">
                         <option>Executive Summary (1 page)</option>
                         <option>Brief Report (2-3 pages)</option>
@@ -552,15 +583,11 @@
                     <label for="q-company" class="qna-label">6. Made By (Optional)</label>
                     <input type="text" id="q-company" class="qna-input" placeholder="Your company name, e.g., 'Acme Corp'">
                 </div>
-                 <div class="qna-item">
-                    <label for="q-design" class="qna-label">7. Design Style</label>
-                    <select id="q-design" class="qna-select">
-                        <option>Minimalist & Clean</option>
-                        <option>Elegant & Classic</option>
-                        <option>Bold & Modern</option>
-                    </select>
-                </div>
-            </div>
+                <!-- THIS IS THE NEW CODE -->
+<div class="qna-item">
+    <label for="q-design" class="qna-label">7. Design Style</label>
+    <input type="text" id="q-design" class="qna-input" placeholder="">
+</div>
             <div class="btn-group">
                 <button class="btn btn-primary" id="generate-btn" disabled>
                     <span>✨ Weave the Story</span>
@@ -580,8 +607,7 @@
             </div>
         </div>
     </div>
-    
-    <script>
+        <script>
 // Define getCookie globally
 function getCookie(name) {
     const cookies = document.cookie.split(';');
@@ -598,6 +624,7 @@ function getCookie(name) {
     if (!uid) {
         alert("Please login, if this is happening repeatedly, please contact support");
         window.location.replace("/index.html");
+        console.log("i am straight bro, no cap")
     }
 })();
 
@@ -611,6 +638,25 @@ for (let i = 0; i < 20; i++) {
     particle.style.animationDuration = (15 + Math.random() * 10) + 's';
     particlesContainer.appendChild(particle);
 }
+// Side Navigation Toggle Logic
+const menuBtn = document.getElementById('menu-btn');
+const navOverlay = document.getElementById('nav-overlay');
+const toggleNav = () => document.body.classList.toggle('nav-open');
+menuBtn.addEventListener('click', toggleNav);
+navOverlay.addEventListener('click', toggleNav);
+    
+    
+function logout() {
+    // Clear uid cookie
+    document.cookie = "uid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Clear any other cookies you might have
+    document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // Redirect
+    window.location.href = '/index.html';
+}
+
+// --- PASTE THIS CLEAN VERSION IN ITS PLACE ---
 
 // UI Element References
 const uploadZone = document.getElementById('upload-zone');
@@ -620,13 +666,79 @@ const fileNameEl = document.getElementById('file-name');
 const generateBtn = document.getElementById('generate-btn');
 const spinner = document.getElementById('spinner');
 const reportPlaceholder = document.getElementById('report-placeholder');
-// Removed unused: reportTextContainer
+
+// --- Typewriter Effect Code ---
+const designInput = document.getElementById('q-design');
+const placeholderTexts = [
+    "Try 'Harry Potter theme'",
+    "Try 'Notion Style'",
+    "Try 'inspired by Stranger Things'",
+    "Try 'Lego-like design'",
+    "Try 'a vintage newspaper layout'",
+    "Try 'cyberpunk aesthetic'"
+];
+
+let textIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+
+function typeEffect() {
+    const currentText = placeholderTexts[textIndex];
+    const typingSpeed = 100;
+    const deletingSpeed = 50;
+    const pauseBeforeDelete = 2000;
+    const pauseBeforeNewText = 500;
+
+    let displayText = isDeleting 
+        ? currentText.substring(0, charIndex--) 
+        : currentText.substring(0, charIndex++);
+
+    designInput.setAttribute('placeholder', displayText);
+
+    if (!isDeleting && charIndex > currentText.length) {
+        isDeleting = true;
+        setTimeout(typeEffect, pauseBeforeDelete);
+        return;
+    }
+
+    if (isDeleting && charIndex < 0) {
+        isDeleting = false;
+        textIndex = (textIndex + 1) % placeholderTexts.length;
+        setTimeout(typeEffect, pauseBeforeNewText);
+        return;
+    }
+    
+    setTimeout(typeEffect, isDeleting ? deletingSpeed : typingSpeed);
+}
+// --- End Typewriter Effect ---
+
+
+// Immediately start the typewriter effect once the DOM is ready
+document.addEventListener('DOMContentLoaded', typeEffect);
+
+
 
 // Global for CSV data
 let main_data = null;
 
 // File Upload Logic
-uploadZone.addEventListener('click', () => fileInput.click());
+//uploadZone.addEventListener('click', () => fileInput.click());
+
+// File Upload Logic
+
+// --- THIS IS THE NEW, BULLETPROOF FIX ---
+uploadZone.addEventListener('click', (event) => {
+    // 1. Stop the browser's default <label> behavior to prevent any conflicts.
+    event.preventDefault();
+
+    // 2. Reset the input value. This ensures the 'change' event fires every time,
+    //    even if the same file is selected again.
+    fileInput.value = null;
+
+    // 3. Now that we have full control, manually trigger the file selection dialog.
+    fileInput.click();
+});
+// --- END OF FIX ---
 
 uploadZone.addEventListener('dragover', (e) => {
     e.preventDefault();

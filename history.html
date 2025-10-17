@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroReport 2.0 - Report History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nav-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #050812;
+            color: #e8e9f3;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Aurora Mouse Follow Effect */
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle at center, rgba(167, 139, 250, 0.15) 0%, rgba(167, 139, 250, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        
+        /* Background System */
+        .bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .gradient-mesh { position: absolute; width: 100%; height: 100%; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 80, 236, 0.15), transparent), radial-gradient(ellipse 60% 50% at 0% 50%, rgba(139, 92, 246, 0.1), transparent), radial-gradient(ellipse 60% 50% at 100% 50%, rgba(167, 139, 250, 0.08), transparent); }
+        .noise { position: absolute; width: 100%; height: 100%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E"); opacity: 0.4; }
+
+        /* Layout & Main Container */
+        .page-wrapper { position: relative; z-index: 2; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem); width: 100%; }
+
+        /* Side Navigation */
+        .side-nav { position: fixed; top: 0; left: 0; width: var(--nav-width); height: 100vh; background: rgba(10, 14, 31, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 1px solid rgba(255, 255, 255, 0.08); z-index: 1001; transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 2rem; display: flex; flex-direction: column; }
+        .side-nav .nav-links { list-style: none; margin-top: 4rem; }
+        .side-nav .nav-links a { display: block; color: #b8b9d4; text-decoration: none; font-size: 1.125rem; font-weight: 500; padding: 1rem 1.5rem; border-radius: 12px; transition: all 0.3s ease; }
+        .side-nav .nav-links a:hover { color: #fff; background: rgba(139, 92, 246, 0.1); }
+        .side-nav .nav-links .active a { color: #fff; background: rgba(139, 92, 246, 0.2); }
+        .nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        body.nav-open .side-nav { transform: translateX(0); }
+        body.nav-open .nav-overlay { opacity: 1; pointer-events: auto; }
+        .top-navbar { position: sticky; top: 0; padding: 1rem 0; z-index: 10; }
+        .menu-icon { cursor: pointer; padding: 0.5rem; z-index: 1002; position: relative; }
+        .menu-icon .line { width: 26px; height: 2px; background-color: #c4b5fd; display: block; margin: 6px 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body.nav-open .menu-icon .line1 { transform: translateY(8px) rotate(45deg); }
+        body.nav-open .menu-icon .line2 { opacity: 0; }
+        body.nav-open .menu-icon .line3 { transform: translateY(-8px) rotate(-45deg); }
+
+        /* Polished Page Header */
+        .page-header { padding: 4rem 0; text-align: center; margin-bottom: 3rem; }
+        .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 7vw, 4.5rem); font-weight: 700; background: linear-gradient(135deg, #ffffff 0%, #e0d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .page-header p { font-size: clamp(1rem, 2vw, 1.25rem); color: #b8b9d4; max-width: 600px; margin: 0 auto; }
+        
+        /* 3D Tilt Cards */
+        .history-list {
+            display: grid;
+            gap: 1.75rem;
+            perspective: 1000px;
+        }
+
+        .history-card {
+            position: relative;
+            padding: 1.75rem 2.25rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            text-decoration: none;
+            color: #e8e9f3;
+            transform-style: preserve-3d;
+            transition: transform 0.1s linear, box-shadow 0.4s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-card:hover {
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.4);
+        }
+        
+        .history-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 24px;
+            background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(167, 139, 250, 0.5), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+        
+        .history-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-content { transform: translateZ(20px); }
+        .card-content .title { font-size: 1.25rem; font-weight: 500; margin-bottom: 0.25rem; }
+        .card-content .date { font-size: 0.9rem; color: #b8b9d4; font-weight: 300; }
+        .card-action { transform: translateZ(20px); }
+        .card-action svg { width: 28px; height: 28px; color: #a78bfa; transition: transform 0.4s ease; }
+        .history-card:hover .card-action svg { transform: translateX(6px) scale(1.1); }
+        
+        .empty-state { text-align: center; padding: 5rem 1rem; color: #7c7d94; font-style: italic; font-family: 'Playfair Display', serif; font-size: 1.25rem; }
+
+        /* Loading Spinner */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 1rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(167, 139, 250, 0.2);
+            border-top: 3px solid #a78bfa;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: #b8b9d4;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-canvas">
+        <div class="aurora" id="aurora"></div>
+        <div class="gradient-mesh"></div>
+        <div class="noise"></div>
+    </div>
+    
+    <nav class="side-nav" id="side-nav">
+        <ul class="nav-links">
+            <li><a href="/mainApp.html">✨ New Report</a></li>
+            <li class="active"><a href="/history.html">📜 History</a></li>
+            <li><a href="#" onclick="logout(); return false;">🚪 Logout</a></li>
+        </ul>
+    </nav>
+    <div class="nav-overlay" id="nav-overlay"></div>
+
+    <div class="page-wrapper">
+        <header class="top-navbar">
+            <div class="container">
+                 <div class="menu-icon" id="menu-btn">
+                    <span class="line line1"></span><span class="line line2"></span><span class="line line3"></span>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <div class="page-header">
+                <h1>The Archives</h1>
+                <p>A living vault of your generated insights. Each card a portal to a past creation.</p>
+            </div>
+            <div class="history-list" id="history-list">
+                <div class="loading-container">
+                    <div>
+                        <div class="spinner"></div>
+                        <div class="loading-text">Summoning your reports...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { 
+      getFirestore, 
+      collection,
+      getDocs
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
+      authDomain: "sigma-app-e9397.firebaseapp.com",
+      projectId: "sigma-app-e9397",
+      storageBucket: "sigma-app-e9397.firebasestorage.app",
+      messagingSenderId: "561606435145",
+      appId: "1:561606435145:web:c68e3629ce50215f177a98",
+      measurementId: "G-1KG5C55LEB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [key, val] = cookie.trim().split('=');
+            if (key === name) return decodeURIComponent(val);
+        }
+        return null;
+    }
+    function logout() {
+    // Clear uid cookie
+    document.cookie = "uid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Clear any other cookies you might have
+    document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // Redirect
+    window.location.href = '/index.html';
+}
+    document.addEventListener('DOMContentLoaded', async () => {
+
+        // Aurora Mouse Follow
+        const aurora = document.getElementById('aurora');
+        document.body.addEventListener('mousemove', e => {
+            aurora.style.left = `${e.clientX}px`;
+            aurora.style.top = `${e.clientY}px`;
+        });
+
+        // Side Navigation Toggle Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const navOverlay = document.getElementById('nav-overlay');
+        const toggleNav = () => document.body.classList.toggle('nav-open');
+        menuBtn.addEventListener('click', toggleNav);
+        navOverlay.addEventListener('click', toggleNav);
+        
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+        
+        async function fetch_reports(uid) {
+            console.log('========================================');
+            console.log('👤 FETCHING ALL REPORTS FOR USER:', uid);
+            console.log('========================================');
+            try {
+                const reportsRef = collection(db, 'users', uid, 'reports');
+                const querySnapshot = await getDocs(reportsRef);
+                if (querySnapshot.empty) {
+                    console.log('❌ No reports found for user:', uid);
+                    return [];
+                }
+                const allReports = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    allReports.push({
+                        id: data.reportId,
+                        title: data.title,
+                        date: data.createdAt,
+                        url: data.permalink,
+                        html: data.html,
+                    });
+                });
+                return allReports;
+            } catch (error) {
+                console.error('❌ ERROR FETCHING REPORTS:', error);
+                console.error('Error details:', error.message);
+                return [];
+            }
+        }
+        
+         const uid = getCookie("uid");
+      
+      if (!uid){
+        alert("please login and try again, if this is a bug, contact support")
+    window.location.href = '/index.html';
+}
+        const reports = await fetch_reports(uid);
+        
+        const historyList = document.getElementById('history-list');
+
+        const renderReports = (reportsToRender) => {
+            historyList.innerHTML = '';
+
+            if (reportsToRender.length === 0) {
+                historyList.innerHTML = `<div class="empty-state">Your generated reports will appear here.</div>`;
+                return;
+            }
+            
+            reportsToRender.forEach(report => {
+                const card = document.createElement('a');
+                card.href = report.url;
+                card.className = 'history-card';
+                card.innerHTML = `
+                    <div class="card-content">
+                        <h3 class="title">${report.title}</h3>
+                        <p class="date">Generated on ${formatDate(report.date)}</p>
+                    </div>
+                    <div class="card-action">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                    </div>
+                `;
+                historyList.appendChild(card);
+            });
+            
+            document.querySelectorAll('.history-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.transform = `rotateX(${(y - rect.height / 2) / 20}deg) rotateY(${-(x - rect.width / 2) / 20}deg)`;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'rotateX(0) rotateY(0)';
+                });
+            });
+        };
+
+        renderReports(reports);
+    });
+    </script>
+</body>
+</html>

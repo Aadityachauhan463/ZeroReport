@@ -40,6 +40,21 @@ body.nav-open .menu-icon .line1 { transform: translateY(8px) rotate(45deg); }
 body.nav-open .menu-icon .line2 { opacity: 0; }
 body.nav-open .menu-icon .line3 { transform: translateY(-8px) rotate(-45deg); }
 
+/* ... inside your <style> tag ... */
+
+/* Nav Footer Counter Styling */
+.nav-footer {
+    margin-top: auto; /* THIS IS THE MAGIC: Pushes the element to the bottom */
+    padding-top: 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#report-count-display {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #b8b9d4;
+}
         /* ZeroReport Background System */
         .bg-canvas {
             position: fixed;
@@ -519,6 +534,11 @@ body.nav-open .menu-icon .line3 { transform: translateY(-8px) rotate(-45deg); }
         <li><a href="/history.html">📜 History</a></li>
         <li><a href="#" onclick="logout(); return false;">🚪 Logout</a></li>
     </ul>
+            <!-- START: NEW FOOTER COUNTER -->
+    <div class="nav-footer">
+        <span id="report-count-display">--</span>
+    </div>
+    <!-- END: NEW FOOTER COUNTER -->
 </nav>
 <div class="nav-overlay" id="nav-overlay"></div>
 
@@ -632,7 +652,28 @@ body.nav-open .menu-icon .line3 { transform: translateY(-8px) rotate(-45deg); }
             </div>
         </div>
     </div>
-        <script>
+        <script type="module">
+            //test uid for debugging.
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { 
+  getFirestore, 
+  collection,
+  getDocs
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyARzeyulL-4c_ATw7NcUP-gsUh2-qE3fNU",
+  authDomain: "sigma-app-e9397.firebaseapp.com",
+  projectId: "sigma-app-e9397",
+  storageBucket: "sigma-app-e9397.firebasestorage.app",
+  messagingSenderId: "561606435145",
+  appId: "1:561606435145:web:c68e3629ce50215f177a98",
+  measurementId: "G-1KG5C55LEB"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 // Define getCookie globally
 function getCookie(name) {
     const cookies = document.cookie.split(';');
@@ -649,8 +690,29 @@ function getCookie(name) {
     if (!uid) {
         alert("Please login. if this is happening repeatedly, please contact support");
         window.location.replace("/index.html");
+        
         console.log("i am straight bro, no cap, you good tho ?")
     }
+})();
+
+async function getReportsGenerated(uid) {
+  const reportsRef = collection(db, 'users', uid, 'reports');
+  const querySnapshot = await getDocs(reportsRef);
+  return querySnapshot.size;
+}
+            const uid = getCookie("uid");
+(async function() {
+    const maxReportsLimit = 30;
+    const totalReportsGenerated = await getReportsGenerated(uid);
+    const mockReportCount = maxReportsLimit - totalReportsGenerated ;
+    const countElement = document.getElementById('report-count-display');
+
+    setTimeout(() => {
+        if (countElement) {
+            // Set the text content to the new format: emoji + number
+            countElement.textContent = `🪙 : ${mockReportCount} Reports`;
+        }
+    }, 500);
 })();
 
 // Particle Generation
@@ -854,7 +916,6 @@ function readCsvAsString(file) {
 }
 
 // Report Generation Logic
-const uid = getCookie("uid");
 generateBtn.addEventListener('click', async () => {
     if (!main_data) {
         alert('Upload and load your CSV first!');

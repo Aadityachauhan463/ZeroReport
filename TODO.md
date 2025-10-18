@@ -14,8 +14,9 @@
 ### Main App Improvements
 - [x] 🔒 Make the main app more secure so only recognised users can only access it.
 - [x] 📝 Add artifacts feature (from Claude) when report is generated
-- [ ] 💰 Implement economy system discussed with Grok
+- [x] 💰 Implement economy system discussed with Grok
 - [ ] update the landing page, make it similar like Klientboost's landing page.
+- [ ] upgrade the gemini prompt so he makes more soulful and more colourful, tl:dr, current reports have too much of corporate energy, remove that fr, you know, this influences the wow factor a fkn lot, so to chase the wow factor, do it.
 - [ ] 📜 Follow the user obsession “cheatsheet” designed by ChatGPT
 
 ### UX & Design
@@ -36,7 +37,7 @@
 ## 🐛 Bugs
 - [x] Cookies not persisting across pages
 - [x] Artifacts feature not triggering when report generated
-- [ ] Economy system counters not updating correctly
+- [x] Economy system counters not updating correctly
 - [x] Remove the limitations in the 7th step (design style)
 - [x] guide the user to magic with placeholders like : "Try Harry potter or cyberpunk or stranger things, the matrix, star wars, lego, pokemon, or rick and morty, whatever"
 - [ ] make the "see it in action" button lead to something, currently, it just throws error.
